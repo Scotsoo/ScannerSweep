@@ -5,7 +5,7 @@ Requires=network-online.target
 
 [Service]
 # ExecStart=serve -s dist
-ExecStart=/bin/bash start.sh
+ExecStart=/bin/bash ./deploy/start.sh
 Restart=always
 User=root
 # Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'

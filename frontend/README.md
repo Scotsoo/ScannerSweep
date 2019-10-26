@@ -25,17 +25,33 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Deployment on the pi
 
-### Setup basic tools and screen
+1. copy raspi_setup.sh on to the pi and run with sudo
 ```
-sudo ./deploy/raspi_setup.sh
+sudo ./raspi_setup.sh
 ````
-
-### Deploy the service
+2. Build
 ```
- sudo cp ./scanner.service /etc/systemd/system/
- ```
+cd /usr/local/bin/scanner/frontend
+sudo npm run build
+```
+3. Deploy the service
+```
+sudo cp ./scanner.service /etc/systemd/system/
+```
 
- ### Check Status of Service
+4. Enable the service
+```
+sudo systemctl enable scanner
+```
+
+5. Reboot
+```
+sudo reboot
+```
+
+## Service management
+
+### Check Status of Service
 ```
 sudo systemctl status scanner
 ```
@@ -43,4 +59,16 @@ sudo systemctl status scanner
 ### Restart Service
 ```
 sudo systemctl restart scanner
+```
+
+### Deploy latest version of the front end
+
+```
+cd /usr/local/bin/scanner
+sudo git fetch origin
+sudo git checkout origin/frontend -- frontend
+cd frontend
+sudo npm install
+sudo npm run build
+sudo reboot
 ```
