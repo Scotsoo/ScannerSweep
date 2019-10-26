@@ -28,8 +28,6 @@ class Handler {
             existingProduct.save()
         }
 
-        newProduct.quantity--
-
         newProduct.save()
         session.save()
 
