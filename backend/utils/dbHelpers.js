@@ -1,7 +1,6 @@
 const Challenge = require('../models/Challenge')
 const Product = require('../models/Product')
 const Session = require('../models/Session')
-const Product = require('../models/Product')
 
 const helpers = require('./helpers')
 
