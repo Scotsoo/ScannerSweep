@@ -1,32 +1,24 @@
 <template>
   <div class="hello">
     <h1>Welcome to Scanner Sweep</h1>
-    <h2>Scan your D-Card</h2>
-
-    <h1>Your D-Card: {{scannedBarcode}}</h1>
+    <h2>Please Scan your DCard to begin</h2>
   </div>
 </template>
 
 <script>
 import BarcodeScanner from '../helpers/BarcodeScanner'
+const bcs = new BarcodeScanner()
 export default {
   name: 'Home',
-  data () {
-    return {
-      scannedBarcode: '',
-    }
-  },
   created: function () {
-    const bcs = new BarcodeScanner()
     bcs.register()
     bcs.on(BarcodeScanner.keys().scanned, (barcode) => {
-      this.scannedBarcode = barcode
+      this.$store.commit('storeDCard', barcode)
+      this.$router.push('Scan')
     })
   },
   beforeDestroy: function () {
-    // window.removeEventListener('keydown', (event) => {
-      // console.log(event)
-    // })
+    bcs.destroy()
   }
 }
 </script>
