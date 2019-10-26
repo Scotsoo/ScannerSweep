@@ -44,8 +44,9 @@ const store = new Vuex.Store({
       statTemp[item.id] = currentItems
       state.scannedItems = Object.assign({}, statTemp)
     },
-    storeWebSocketSessionId (state, sessionId) {
-      state.websocketSessionId = sessionId
+    storeInitData (state, items) {
+      state.scannedItems = Object.assign({}, items)
+      // state.websocketSessionId = sessionId
     }
   }
 })

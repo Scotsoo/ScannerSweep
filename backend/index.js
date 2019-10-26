@@ -6,7 +6,6 @@ const uuid = require('uuid')
 const dbHelpers = require('./utils/dbHelpers')
 
 const wss = new WebSocket.Server({ port: 8081 })
-const sessions = {}
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 
 wss.on('connection', function connection(ws) {
@@ -19,11 +18,6 @@ wss.on('connection', function connection(ws) {
   })
 
   ws.session.save()
-  ws.send(JSON.stringify({
-    action: 'init',
-    payload: ws.id
-  }))
-
 
   const interval = setInterval(function ping() {
     wss.clients.forEach(function each(ws) {
@@ -59,22 +53,33 @@ wss.on('connection', function connection(ws) {
         }
         break;
       case "init":
-        let session = sessions[req.payload]
+        // let session = sessions[req.session]
+        let session = await dbHelpers.getSessionFromId(req.session)
         if(!session) {
-            console.log('session not found, creating new one', req.payload)
+            console.log('session not found, creating new one', req.session)
             session = new Session({
-                id: ws.id,
+                id: req.session,
                 items: []
             })
-            sessions[req.payload] = session
         } else {
-            console.log('session not found for ', req.payload)
+            console.log('session found for ', req.session)
         }
         ws.session = session
-        ws.session.save()
+        await ws.session.save()
+        const items = await Promise.all(session.items.map(async m => {
+            let product = await dbHelpers.getProductById(m.id)
+            product = JSON.parse(JSON.stringify(product))
+            product.quantity = m.quantity
+            console.log('PRODUCT', product)
+            return product
+        }))
+        const mappedItems = {}
+        items.forEach(item => {
+            mappedItems[item.id] = item
+        })
         ws.send(JSON.stringify({
-            action: 'init',
-            payload: ws.id
+            action: 'initResponse',
+            payload: mappedItems
         }))
         break;
 
