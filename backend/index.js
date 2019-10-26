@@ -67,10 +67,15 @@ wss.on('connection', function connection(ws) {
   ws.isAlive = true
 
   function checkClient () {
+    console.log('checking for alive clients')
     wss.clients.forEach(ws => {
-      if (!ws.isAlive) return ws.terminate()
-
+      if (!ws.isAlive) {
+        console.log('EXTERMINATE')
+        return ws.terminate()
+      }
+      console.log('marked as ded')
       ws.isAlive = false
+      console.log('issued ping')
       ws.ping(null, false, true)
     })
 
@@ -80,6 +85,7 @@ wss.on('connection', function connection(ws) {
   setTimeout(checkClient, 1000)
 
   ws.on('pong', () => {
+    console.log('pong received. marked alive')
     ws.isAlive = true
   })
 
