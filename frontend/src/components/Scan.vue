@@ -21,7 +21,7 @@
             {{scannedItems[scannedItemKey].quantity}}
           </td>
           <td>
-            {{toMoney(calculatePrice(scannedItems[scannedItemKey]))}}
+            £{{toMoney(calculatePrice(scannedItems[scannedItemKey]))}}
           </td>
         </tr>
       </tbody>
@@ -80,7 +80,6 @@ export default {
     bcs.register()
     bcs.on(BarcodeScanner.keys().scanned, (barcode) => {
       this.$webSocket.scanItem(barcode)
-      // this.$store.commit('pushScannedItem', barcode)
     })
   },
   beforeDestroy: function () {

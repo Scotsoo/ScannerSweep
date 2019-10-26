@@ -21,14 +21,14 @@ const routes = [
 const store = new Vuex.Store({
   state: {
     dCardId: '',
-    scannedItems: {}
+    scannedItems: {},
+    websocketSessionId: ''
   },
   mutations: {
     storeDCard (state, value) {
       state.dCardId = value
     },
     pushScannedItem (state, item) {
-      console.log('item', item)
       const statTemp = state.scannedItems
       let currentItems = statTemp[item.barcode]
       if (!currentItems) {
@@ -42,6 +42,9 @@ const store = new Vuex.Store({
       currentItems.quantity++
       statTemp[item.barcode] = currentItems
       state.scannedItems = Object.assign({}, statTemp)
+    },
+    storeWebSocketSessionId (state, sessionId) {
+      state.websocketSessionId = sessionId
     }
   }
 })
@@ -53,8 +56,6 @@ const router = new VueRouter({
 Vue.config.productionTip = false
 const webSocket = new WebSocketHelper()
 Vue.prototype.$webSocket = webSocket
-
-webSocket.register(this)
 const v = new Vue({
   render: h => h(App),
   router,
@@ -63,4 +64,5 @@ const v = new Vue({
   created() {
   }
 }).$mount('#app')
-Vue.prototype.$webSocket.register(v)
+webSocket.register(v)
+// Vue.prototype.$webSocket.register(v)
