@@ -74,10 +74,10 @@ wss.on('connection', function connection(ws) {
       ws.ping(null, false, true)
     })
 
-    setTimeout(checkClient, 10000)
+    setTimeout(checkClient, 1000)
   }
 
-  setTimeout(checkClient, 10000)
+  setTimeout(checkClient, 1000)
 
   ws.on('pong', () => {
     ws.isAlive = true
