@@ -4,6 +4,12 @@
 cp /boot/config.txt /boot/config.txt.bak
 sed -i '/dtoverlay/c\dtoverlay=tft35a:rotate=0' /boot/config.txt
 
+## Hide cursor
+sudo apt-get install unclutter
+mkdir -p /home/pi/.config/lxsession/LXDE-pi/
+touch /home/pi/.config/lxsession/LXDE-pi/autostart
+echo "@unclutter -idle 0" >> /etc/xdg/lxsession/LXDE-pi/autostart
+
 ## Install node
 mkdir /opt/downloads
 ##mkdir /usr/local/node-v12.7.0
@@ -11,7 +17,7 @@ wget https://nodejs.org/dist/v12.7.0/node-v12.7.0-linux-armv7l.tar.gz -O /opt/do
 tar -xzf /opt/downloads/node-v12.7.0.tar.gz -C /opt/downloads
 cp -R /opt/downloads/node-v12.7.0-linux-armv7l/* /usr/local/
 
-##
+## Add serve utility - used for starting the application
 npm install -g serve
 
 ## Setup deploy location
@@ -24,3 +30,5 @@ git checkout origin/frontend -- frontend
 cd frontend
 npm install
 
+## Open application on startup
+echo "chromium-browser --kiosk --ignore-certificate-errors --disable-restore-session-state --app=http://localhost:8080" >> /etc/xdg/lxsession/LXDE-pi/autostart
