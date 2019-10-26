@@ -14,10 +14,15 @@ class Handler {
             product.id === newProduct.id
         })
         if (!existingProduct) {
-            session.items.push(product)
+            // new product
+            session.items.push({
+                id: product.id,
+                quantity: 1
+            })
         } else {
-            // increment quantity in session instead of duplicate add
-            session.items.push(product)
+            // existing product
+            existingProduct.quantity++
+            existingProduct.save()
         }
 
         newProduct.quantity--
