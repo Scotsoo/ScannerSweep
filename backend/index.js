@@ -64,14 +64,7 @@ function challengeGenerator () {
 challengeGenerator()
 
 wss.on('connection', function connection(ws) {
-  ws.id = uuid.v4()
-  ws.session = new Session({
-      id: ws.id,
-      items: []
-  })
   ws.isAlive = true
-
-  ws.session.save()
 
   function checkClient () {
     wss.clients.forEach(ws => {
@@ -116,7 +109,7 @@ wss.on('connection', function connection(ws) {
           if (challenge && challenge.product === newProduct.id) {
             challenge.timeRemaining = 0
             challenge.save()
-            
+
             helpers.send(ws, {
               action: 'challenge_complete'
             })
@@ -138,6 +131,7 @@ wss.on('connection', function connection(ws) {
         } else {
             console.log('session found for ', req.session)
         }
+        ws.id = req.session
         ws.session = session
         await ws.session.save()
         const items = await Promise.all(session.items.map(async m => {

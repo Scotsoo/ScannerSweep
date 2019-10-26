@@ -25,7 +25,7 @@ class Handler {
         } else {
             // existing product
             existingProduct.quantity++
-            existingProduct.save()
+            // existingProduct.save()
             const idx = session.items.findIndex(product => product.id === newProduct.id)
             session.items[idx] = existingProduct
         }
