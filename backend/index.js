@@ -19,7 +19,7 @@ wss.on('connection', function connection(ws) {
     console.log(`Received message "${message.trim()}"`)
     try {
       req = JSON.parse(message)
-    } catch(e) {
+    } catch (e) {
       return console.log(e)
     }
     if (!req.action) {

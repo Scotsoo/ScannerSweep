@@ -4,7 +4,7 @@ const Product = require('./Product')
 
 const sessionSchema = new mongoose.Schema({
     id : { type : String },
-    items : [{ type : Product.schema }]
+    items : [{ type : ProductInBasket.schema }]
 })
 
 module.exports = mongoose.model('Session', sessionSchema)
