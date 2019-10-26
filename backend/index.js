@@ -21,23 +21,24 @@ const challengeInterval = setTimeout(async () => {
   const product = await dbHelpers.findRandomProduct()
   const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
 
-  const challenge = new Challenge({
+  const newChallenge = new Challenge({
     id: uuid.v4(),
     product: product.id,
     text: `Scan ${product.name}`,
     timeRemaining: time
   })
 
-  challenge.save()
+  newChallenge.save()
 
   helpers.broadcast(wss, {
     action: 'challenge',
-    payload: challenge
+    payload: newChallenge
   })
 
   async function recursiveChallenge(id) {
+    let challenge
     try {
-      const challenge = await dbHelpers.findChallengeById(id)
+      challenge = await dbHelpers.findChallengeById(id)
     } catch (e) {
       console.error(`Challenge with ID "${id}" doesn't exist in DB`)
       return
@@ -61,7 +62,7 @@ const challengeInterval = setTimeout(async () => {
     }
   }
 
-  Promise.delay(1000).then(() => recursiveChallenge(challenge.id))
+  Promise.delay(1000).then(() => recursiveChallenge(newChallenge.id))
 }, 1000 * helpers.generateRandomChallengeInterval())
 
 wss.on('connection', function connection(ws) {
