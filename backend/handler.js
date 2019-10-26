@@ -12,22 +12,23 @@ class Handler {
         if (newProduct.quantity < 1) {
             throw new Error(`Not enough stock of ${newProduct.name}`)
         }
-
         const existingProduct = session.items.find(product => {
-            product.id === newProduct.id
+            return product.id === newProduct.id
         })
+
         if (!existingProduct) {
             // new product
             session.items.push({
                 id: newProduct.id,
-                quantity: 1
+                quantity: 1,
             })
         } else {
             // existing product
             existingProduct.quantity++
             existingProduct.save()
+            const idx = session.items.findIndex(product => product.id === newProduct.id)
+            session.items[idx] = existingProduct
         }
-
         newProduct.save()
         session.save()
 

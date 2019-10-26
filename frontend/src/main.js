@@ -14,7 +14,7 @@ const routes = [
     path: '/', component: Home, name: 'Home'
   },
   {
-    path: '/scan', component: Scan, name: 'Scan'
+  path: '/scan', component: Scan, name: 'Scan'
   }
 ]
 
@@ -44,8 +44,9 @@ const store = new Vuex.Store({
       statTemp[item.id] = currentItems
       state.scannedItems = Object.assign({}, statTemp)
     },
-    storeWebSocketSessionId (state, sessionId) {
-      state.websocketSessionId = sessionId
+    storeInitData (state, items) {
+      state.scannedItems = Object.assign({}, items)
+      // state.websocketSessionId = sessionId
     }
   }
 })

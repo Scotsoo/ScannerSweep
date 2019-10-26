@@ -8,6 +8,10 @@ async function getSessionFromId (id) {
   const session = await Session.findOne({ id }).exec()
   return session
 }
+async function getProductById (id) {
+  const session = await Product.findOne({ id }).exec()
+  return session
+}
 
 async function findChallengeById (id) {
   const challenge = await Challenge.findOne({ id }).exec()
@@ -31,5 +35,6 @@ module.exports = {
   getSessionFromId,
   findChallengeById,
   findChallengeWithTimeRemaining,
-  findRandomProduct
+  findRandomProduct,
+  getProductById
 }

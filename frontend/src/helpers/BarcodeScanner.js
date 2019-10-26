@@ -7,6 +7,23 @@ export default class BarcodeScanner extends EventEmitter {
     super()
     this.timeout = null
     this.cachedKeys = []
+    const keyHandler = ({key}) => {
+      if (key === 'Enter') {
+        this.emit(eventKeys.scanned, this.cachedKeys.join(''))
+        clearTimeout(this.timeout)
+        this.cachedKeys = []
+      } else {
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          this.cachedKeys = []
+          console.log('cached keys reset cause of timeout')
+        }, 500)
+        this.cachedKeys.push(key)
+      }
+    }
+    // don't ask any fkn questions please
+    this.keyHandler = keyHandler.bind(this)
+    // just don't.
   }
 
   static keys() {
@@ -15,26 +32,13 @@ export default class BarcodeScanner extends EventEmitter {
 
   destroy () {
     console.log('destroy called')
-    window.removeEventListener('keydown', event => this.keyHandler(event))
+    window.removeEventListener('keydown', this.keyHandler)
   }
 
   register () {
     console.log('register called')
-    window.addEventListener('keydown', event => this.keyHandler(event))
+    window.addEventListener('keydown', this.keyHandler)
   }
 
-  keyHandler ({key}) {
-    if (key === 'Enter') {
-      this.emit(eventKeys.scanned, this.cachedKeys.join(''))
-      clearTimeout(this.timeout)
-      this.cachedKeys = []
-    } else {
-      clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
-        this.cachedKeys = []
-        console.log('cached keys reset cause of timeout')
-      }, 500)
-      this.cachedKeys.push(key)
-    }
-  }
+
 }

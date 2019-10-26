@@ -16,6 +16,7 @@ export default {
     bcs.register()
     bcs.on(BarcodeScanner.keys().scanned, (barcode) => {
       this.$store.commit('storeDCard', barcode)
+      this.$webSocket.initSession(barcode)
       this.$router.push('Scan')
     })
   },
