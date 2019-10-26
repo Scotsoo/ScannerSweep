@@ -1,6 +1,6 @@
 const WebSocket = require('ws')
 const handler = require('./handler')
-const Session = require('models/Session')
+const Session = require('./models/Session')
 const uuid = require('uuid')
 
 const wss = new WebSocket.Server({ port: 8080 })
