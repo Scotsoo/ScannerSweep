@@ -54,10 +54,10 @@ export default {
       return `£${this.toMoney(price)}`
     },
     userId: function() {
-      // const ignoreUserId = true
-      // if (ignoreUserId) {
-      //   return 'Dev mode!!'
-      // }
+      const ignoreUserId = false
+      if (ignoreUserId) {
+        return 'Dev mode!!'
+      }
       return this.$store.state.dCardId
     },
     scannedItems: function () {

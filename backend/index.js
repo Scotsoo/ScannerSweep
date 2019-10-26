@@ -6,12 +6,13 @@ const uuid = require('uuid')
 const dbHelpers = require('./utils/dbHelpers')
 
 const wss = new WebSocket.Server({ port: 8081 })
+const sessions = {}
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 
 wss.on('connection', function connection(ws) {
   ws.isAlive = true
   ws.on('pong', heartbeat)
-  ws.id = uuid.v4()
+//   ws.id = uuid.v4()
   ws.session = new Session({
       id: ws.id,
       items: []
@@ -22,6 +23,7 @@ wss.on('connection', function connection(ws) {
     action: 'init',
     payload: ws.id
   }))
+
 
   const interval = setInterval(function ping() {
     wss.clients.forEach(function each(ws) {
@@ -55,6 +57,25 @@ wss.on('connection', function connection(ws) {
         catch (e) {
           return console.log(e)
         }
+        break;
+      case "init":
+        let session = sessions[req.payload]
+        if(!session) {
+            console.log('session not found, creating new one', req.payload)
+            session = new Session({
+                id: ws.id,
+                items: []
+            })
+            sessions[req.payload] = session
+        } else {
+            console.log('session not found for ', req.payload)
+        }
+        ws.session = session
+        ws.session.save()
+        ws.send(JSON.stringify({
+            action: 'init',
+            payload: ws.id
+        }))
         break;
 
       default:

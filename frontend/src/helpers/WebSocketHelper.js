@@ -13,7 +13,8 @@ export default class WebSocketHelper {
 
   register(vueContext) {
     this.vueContext = vueContext
-    this.websocket = new WebSocket('ws://hack19.mindez.co.uk:80')
+    // this.websocket = new WebSocket('ws://hack19.mindez.co.uk:80')
+    this.websocket = new WebSocket('ws://localhost:8081')
     this.websocket.addEventListener('message', (data) => {
       const message = JSON.parse(data.data)
       if (message.action === 'added') {
@@ -24,10 +25,15 @@ export default class WebSocketHelper {
     })
   }
 
+  initSession(barcode) {
+    this.websocket.send(this.constructWebSocketItem('init', barcode))
+  }
+
   scanItem (barcode) {
     const item = this.constructWebSocketItem('add', barcode)
     this.websocket.send(item)
   }
+
 
   destroy () {
     this.websocket.close()
