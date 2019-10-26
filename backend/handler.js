@@ -7,7 +7,7 @@ class Handler {
 
         const newProduct = await Product.findOne({ id }).exec()
 
-        if (!newProduct) return new Error(`Unable to find product with id "${id}"`)
+        if (!newProduct) throw new Error(`Unable to find product with id "${id}"`)
 
         if (newProduct.quantity < 1) {
             throw new Error(`Not enough stock of ${newProduct.name}`)
