@@ -94,7 +94,7 @@ wss.on('connection', function connection(ws) {
           })
           
           const challenge = await dbHelpers.findChallengeWithTimeRemaining()
-          if (challenge.product === newProduct.id) {
+          if (challenge && challenge.product === newProduct.id) {
             helpers.send(ws, {
               action: 'challenge_complete'
             })
