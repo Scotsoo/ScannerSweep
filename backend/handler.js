@@ -1,11 +1,13 @@
 const Product = require('./models/Product')
 
 class Handler {
-    static add(id, session) {
+    static async add(id, session) {
         if (!session) throw new Error('No session found')
         if (!id) throw new Error('No ID provided')
 
-        const newProduct = Product.findOne({ id })
+        const newProduct = await Product.findOne({ id }).exec()
+
+        if (!newProduct) return new Error(`Unable to find product with id "${id}"`)
 
         if (newProduct.quantity < 1) {
             throw new Error(`Not enough stock of ${newProduct.name}`)
