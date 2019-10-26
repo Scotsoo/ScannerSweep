@@ -30,17 +30,18 @@ const store = new Vuex.Store({
     },
     pushScannedItem (state, item) {
       const statTemp = state.scannedItems
-      let currentItems = statTemp[item.barcode]
+      let currentItems = statTemp[item.id]
+      console.log('id', item.id)
       if (!currentItems) {
         currentItems = {
-          barcode: item.barcode,
+          id: item.id,
           name: item.name,
           quantity: 0,
           price: item.price
         }
       }
       currentItems.quantity++
-      statTemp[item.barcode] = currentItems
+      statTemp[item.id] = currentItems
       state.scannedItems = Object.assign({}, statTemp)
     },
     storeWebSocketSessionId (state, sessionId) {
