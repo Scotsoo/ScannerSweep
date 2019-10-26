@@ -1,0 +1,18 @@
+[Unit]
+Description=Scanner
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+# ExecStart=serve -s dist
+ExecStart=/bin/bash ./deploy/start.sh
+Restart=always
+User=root
+# Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
+Group=root
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=development
+WorkingDirectory=/usr/local/bin/scanner/frontend/
+
+[Install]
+WantedBy=multi-user.target
