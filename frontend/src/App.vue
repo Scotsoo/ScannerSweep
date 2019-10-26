@@ -23,4 +23,9 @@ html {
   background-color: #F2CA99;
   color: #8C0B47;
 }
+
+#app {
+  background-color: #F2CA99;
+}
+
 </style>

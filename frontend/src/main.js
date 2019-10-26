@@ -6,8 +6,16 @@ import Home from './components/Home'
 import Scan from './components/Scan'
 import WebSocketHelper from './helpers/WebSocketHelper'
 
+import BootstrapVue from 'bootstrap-vue'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(BootstrapVue)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+
+
 
 const routes = [
   {
