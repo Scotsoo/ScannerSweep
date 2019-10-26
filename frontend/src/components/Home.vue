@@ -1,17 +1,20 @@
 <template>
-  <div class="hello">
+  <div class="container hello">
     <img src ="../assets/dale.png" style="width: 10vh" class="dale">
     <h1 class="scanner">Scanner</h1>
     <h1 class="sweep">SWEEP</h1>
     <h2>Scan your DCard to begin</h2>
+    <Toast></Toast>
   </div>
 </template>
 
 <script>
 import BarcodeScanner from '../helpers/BarcodeScanner'
+import Toast from './Toast'
 const bcs = new BarcodeScanner()
 export default {
   name: 'Home',
+  components: {Toast},
   created: function () {
     bcs.register()
     bcs.on(BarcodeScanner.keys().scanned, (barcode) => {
