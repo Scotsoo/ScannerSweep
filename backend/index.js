@@ -3,6 +3,7 @@ const handler = require('./handler')
 const mongoose = require('mongoose')
 const Session = require('./models/Session')
 const uuid = require('uuid')
+const dbHelpers = require('./utils/dbHelpers')
 
 const wss = new WebSocket.Server({ port: 8080 })
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
@@ -10,12 +11,17 @@ mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 wss.on('connection', function connection(ws) {
   ws.isAlive = true
   ws.on('pong', heartbeat)
+  ws.id = uuid.v4()
   ws.session = new Session({
-      id: uuid.v4(),
+      id: ws.id,
       items: []
   })
 
   ws.session.save()
+  ws.send(JSON.stringify({
+    action: 'init',
+    payload: ws.id
+  }))
 
   const interval = setInterval(function ping() {
     wss.clients.forEach(function each(ws) {
@@ -39,7 +45,8 @@ wss.on('connection', function connection(ws) {
     switch (req.action) {
       case "add":
         try {
-          const newProduct = await handler.add(req.payload, this.session)
+          const session = await dbHelpers.getSessionFromId(req.session)
+          const newProduct = await handler.add(req.payload, session)
           ws.send(JSON.stringify({
             action: 'added',
             payload: newProduct
