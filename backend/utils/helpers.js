@@ -29,7 +29,7 @@ function broadcastWrapper(wss, object) {
     console.log(`Sent to ${clients} client/s:`, object)
 }
 
-modules.exports = {
+module.exports = {
     broadcast: broadcastWrapper,
     generateRandom,
     generateRandomChallengeInterval,
