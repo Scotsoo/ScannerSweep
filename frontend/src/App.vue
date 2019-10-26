@@ -17,10 +17,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   /* color: #2c3e50; */
-  margin-top: 60px;
+  /* margin-top: 60px; */
 }
 html {
   background-color: #F2CA99;
   color: #8C0B47;
 }
+
+#app {
+  background-color: #F2CA99;
+}
+
 </style>

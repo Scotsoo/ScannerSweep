@@ -1,6 +1,6 @@
 const WebSocket = require('ws')
 
-const ws = new WebSocket('ws://localhost:8081')
+const ws = new WebSocket('ws://localhost:8086')
 
 ws.onopen = _ => {
     console.log('Connected!')

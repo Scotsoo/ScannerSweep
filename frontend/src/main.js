@@ -6,15 +6,23 @@ import Home from './components/Home'
 import Scan from './components/Scan'
 import WebSocketHelper from './helpers/WebSocketHelper'
 
+import BootstrapVue from 'bootstrap-vue'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(BootstrapVue)
 Vue.use(VueRouter)
 Vue.use(Vuex)
+
+
 
 const routes = [
   {
     path: '/', component: Home, name: 'Home'
   },
   {
-    path: '/scan', component: Scan, name: 'Scan'
+  path: '/scan', component: Scan, name: 'Scan'
   }
 ]
 
@@ -44,8 +52,9 @@ const store = new Vuex.Store({
       statTemp[item.id] = currentItems
       state.scannedItems = Object.assign({}, statTemp)
     },
-    storeWebSocketSessionId (state, sessionId) {
-      state.websocketSessionId = sessionId
+    storeInitData (state, items) {
+      state.scannedItems = Object.assign({}, items)
+      // state.websocketSessionId = sessionId
     }
   }
 })

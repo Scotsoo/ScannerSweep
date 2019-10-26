@@ -1,7 +1,7 @@
 <template>
   <div class="">
-    <table style="margin-left:auto; margin-right:auto;">
-      <thead>
+    <table class="sticky-table">
+      <thead class="header">
         <th colspan="2">
           Product
         </th>
@@ -12,8 +12,18 @@
           Price
         </th>
       </thead>
-      <tbody style="">
-        <tr v-for="scannedItemKey in Object.keys(scannedItems)" :key="scannedItemKey">
+      <tr class="bold total-row">
+        <td colspan="2">
+          Total
+        </td>
+        <td>
+        </td>
+        <td>
+          {{totalPrice}}
+        </td>
+      </tr>
+      <tbody>
+        <tr v-for="scannedItemKey in Object.keys(scannedItems).reverse()" :key="scannedItemKey">
           <td colspan="2">
             {{scannedItems[scannedItemKey].name}}
           </td>
@@ -25,16 +35,6 @@
           </td>
         </tr>
       </tbody>
-      <tfoot>
-        <td colspan="2">
-          Total
-        </td>
-        <td>
-        </td>
-        <td>
-          {{totalPrice}}
-        </td>
-      </tfoot>
     </table>
   </div>
 </template>
@@ -54,10 +54,10 @@ export default {
       return `£${this.toMoney(price)}`
     },
     userId: function() {
-      // const ignoreUserId = true
-      // if (ignoreUserId) {
-      //   return 'Dev mode!!'
-      // }
+      const ignoreUserId = false
+      if (ignoreUserId) {
+        return 'Dev mode!!'
+      }
       return this.$store.state.dCardId
     },
     scannedItems: function () {
@@ -90,6 +90,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.total-row {
+  background-color:#D97904;
+}
+.header {
+  background-color:#8C0B47;
+}
+.sticky-table{
+  width:100vw;
+}
+.bold  {
+  font-weight: bolder
+}
 h3 {
   margin: 40px 0 0;
 }
