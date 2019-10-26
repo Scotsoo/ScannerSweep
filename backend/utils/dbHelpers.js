@@ -5,6 +5,6 @@ async function getSessionFromId (id) {
   return session
 }
 
-export {
+module.exports = {
   getSessionFromId
 }
