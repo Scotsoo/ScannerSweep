@@ -7,7 +7,7 @@ const uuid = require('uuid')
 const dbHelpers = require('./utils/dbHelpers')
 const helpers = require('./utils/helpers')
 
-const wss = new WebSocket.Server({ port: 8081 })
+const wss = new WebSocket.Server({ port: 8086 })
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 
 function challengeGenerator () {

@@ -14,8 +14,8 @@ export default class WebSocketHelper {
 
   register(vueContext) {
     this.vueContext = vueContext
-    // this.websocket = new WebSocket('ws://hack19.mindez.co.uk:80')
-    this.websocket = new WebSocket('ws://localhost:8081')
+    this.websocket = new WebSocket('ws://hack19.mindez.co.uk:80')
+    // this.websocket = new WebSocket('ws://localhost:8086')
     this.websocket.addEventListener('message', (data) => {
       const message = JSON.parse(data.data)
       if (message.action === 'added') {
