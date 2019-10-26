@@ -69,11 +69,29 @@ wss.on('connection', function connection(ws) {
       id: ws.id,
       items: []
   })
+  ws.isAlive = true
 
   ws.session.save()
   helpers.send(ws, {
     action: 'init',
     payload: ws.id
+  })
+
+  function checkClient () {
+    wss.clients.forEach(ws => {
+      if (!ws.isAlive) return ws.terminate()
+
+      ws.isAlive = false
+      ws.ping(null, false, true)
+    })
+
+    setTimeout(checkClient, 10000)
+  }
+
+  setTimeout(checkClient, 10000)
+
+  ws.on('pong', () => {
+    ws.isAlive = true
   })
 
   ws.on('message', async function incoming(message) {
