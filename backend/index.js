@@ -10,14 +10,6 @@ const helpers = require('./utils/helpers')
 const wss = new WebSocket.Server({ port: 8081 })
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 
-const interval = setInterval(function ping() {
-  wss.clients.forEach(function each(ws) {
-    if (ws.isAlive === false) return ws.terminate()
-    ws.isAlive = false
-    ws.ping(noop)
-  })
-}, 30000)
-
 const challengeInterval = setTimeout(async () => {
   const product = await dbHelpers.findRandomProduct()
   const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
@@ -67,8 +59,6 @@ const challengeInterval = setTimeout(async () => {
 }, 1000 * helpers.generateRandomChallengeInterval())
 
 wss.on('connection', function connection(ws) {
-  ws.isAlive = true
-  ws.on('pong', heartbeat)
   ws.id = uuid.v4()
   ws.session = new Session({
       id: ws.id,
@@ -98,14 +88,14 @@ wss.on('connection', function connection(ws) {
           const session = await dbHelpers.getSessionFromId(req.session)
           const newProduct = await handler.add(req.payload, session)
           
-          helpers.send({
+          helpers.send(ws, {
             action: 'added',
             payload: newProduct
           })
           
           const challenge = await dbHelpers.findChallengeWithTimeRemaining()
           if (challenge.product === newProduct.id) {
-            helpers.send({
+            helpers.send(ws, {
               action: 'challenge_complete'
             })
           }
@@ -123,8 +113,3 @@ wss.on('connection', function connection(ws) {
 
   console.log(`Connection established to a client!`)
 })
-
-function noop() { }
-function heartbeat() {
-  this.isAlive = true
-}

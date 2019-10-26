@@ -19,7 +19,7 @@ function sendWrapper(ws, object) {
 
 function broadcastWrapper(wss, object) {
     let clients = 0
-    wss.client.forEach(function broadcastEach(client) {
+    wss.clients.forEach(function broadcastEach(client) {
         if (client.readyState === WebSocket.OPEN) {
             clients++
             sendWrapper(client, object)
