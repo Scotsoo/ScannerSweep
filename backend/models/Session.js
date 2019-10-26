@@ -3,8 +3,11 @@ const mongoose = require('mongoose')
 const Product = require('./Product')
 
 const sessionSchema = new mongoose.Schema({
-    id : { type : Number },
-    items : [{ type : Product.schema }]
+    id : { type : String },
+    items : [{
+        id : { type : Number },
+        quantity : { type : Number }
+    }]
 })
 
 module.exports = mongoose.model('Session', sessionSchema)
