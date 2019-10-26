@@ -15,8 +15,9 @@ export default class WebSocketHelper {
   register(vueContext) {
     this.vueContext = vueContext
     this.websocket = new WebSocket('ws://hack19.mindez.co.uk:80')
-
-      const message = JSON.parse(data.data)
+    //this.websocket.addEventListener('message', (data) => {
+     this.listen((data) => {
+       const message = JSON.parse(data.data)
       if (message.action === 'added') {
         this.vueContext.$store.commit('pushScannedItem', message.payload, true)
       } else if (message.action === 'initResponse') {
@@ -26,6 +27,9 @@ export default class WebSocketHelper {
     })
   }
 
+  listen(cb) {
+    this.websocket.addEventListener('message', cb);
+  }
 
   scanItem (barcode) {
     const item = this.constructWebSocketItem('add', barcode)
