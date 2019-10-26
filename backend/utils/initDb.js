@@ -2,6 +2,7 @@ const async = require('async')
 const mongoose = require('mongoose')
 const Product = require('../models/Product')
 const Session = require('../models/Session')
+const Challenge = require('../models/Challenge')
 
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 
@@ -17,7 +18,8 @@ async.parallel([
     (cb) => { new Product({ id : '8714789810348', slug : 'colgate', name: "Colgate", price: 0.88 }).save(cb) },
     (cb) => { new Product({ id : '8714789810348', slug : 'cadburybrunchbar', name: "Cadbury\'s brunch bar", price: 0.88 }).save(cb) },
     (cb) => { new Product({ id : '00300858', slug : 'pasty', name: "2x Cheesy Bean Puff Pastry Slices", price: 1.20 }).save(cb) },
-    (cb) => { Session.deleteMany({}, cb) }
+    (cb) => { Session.deleteMany({}, cb) },
+    (cb) => { Challenge.deleteMany({}, cb) }
 ], (err) => {
     if (err) {
         console.log(err)
