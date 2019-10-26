@@ -29,9 +29,16 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": "off"
+    },
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "babel-eslint",
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": false,
+        "modules": true
+      }
     }
   },
   "postcss": {
