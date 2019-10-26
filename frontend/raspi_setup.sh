@@ -23,3 +23,6 @@ git fetch origin
 git checkout origin/frontend -- frontend
 cd frontend
 npm install
+
+## Open application on startup
+echo "chromium-browser --kiosk --ignore-certificate-errors --disable-restore-session-state --app=http://localhost:8080" >> /etc/xdg/lxsession/LXDE-pi/autostart
