@@ -1,9 +1,11 @@
 const WebSocket = require('ws')
 const handler = require('./handler')
+const mongoose = require('mongoose')
 const Session = require('./models/Session')
 const uuid = require('uuid')
 
 const wss = new WebSocket.Server({ port: 8080 })
+mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 
 wss.on('connection', function connection(ws) {
   ws.isAlive = true
