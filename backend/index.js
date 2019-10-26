@@ -22,7 +22,7 @@ wss.on('connection', function connection(ws) {
     } catch(e) {
       return console.log(e)
     }
-        if (!req.action) {
+    if (!req.action) {
       return console.log(`No action found in message`)
     }
 
