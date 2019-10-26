@@ -40,7 +40,7 @@ function challengeGenerator () {
 
       if (challenge.timeRemaining === 0) {
         Challenge.deleteOne(challenge)
-        helpers.broadcast(ws, {
+        helpers.broadcast(wss, {
           action: 'challenge_end'
         })
         challengeGenerator()
