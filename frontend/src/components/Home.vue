@@ -1,7 +1,9 @@
 <template>
   <div class="hello">
-    <h1>Welcome to Scanner Sweep</h1>
-    <h2>Please Scan your DCard to begin</h2>
+    <img src ="../assets/dale.png" style="width: 10vh" class="dale">
+    <h1 class="scanner">Scanner</h1>
+    <h1 class="sweep">SWEEP</h1>
+    <h2>Scan your DCard to begin</h2>
   </div>
 </template>
 
@@ -25,6 +27,28 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@keyframes rotation {
+  100% {
+    transform: rotate(-20deg)
+  }
+  50% {
+    transform: rotate(40deg);
+  }
+  0% {
+    transform: rotate(-20deg);
+  }
+}
+.dale {
+  display: inline-block;
+  animation: rotation 3s infinite ease;
+}
+
+.scanner{
+  color: #0476D9
+}
+.sweep{
+  color: #D97904
+}
 h3 {
   margin: 40px 0 0;
 }

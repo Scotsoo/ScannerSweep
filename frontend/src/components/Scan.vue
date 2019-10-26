@@ -1,8 +1,6 @@
 <template>
   <div class="">
-    <h1>Scan As You Shop</h1>
-    <h1>Your D-Card: {{userId}}</h1>
-    <table>
+    <table style="margin-left:auto; margin-right:auto;">
       <thead>
         <th colspan="2">
           Product
@@ -44,6 +42,7 @@
 <script>
 import BarcodeScanner from '../helpers/BarcodeScanner'
 const bcs = new BarcodeScanner()
+
 export default {
   name: 'Scan',
   computed: {
@@ -55,10 +54,10 @@ export default {
       return `£${this.toMoney(price)}`
     },
     userId: function() {
-      const ignoreUserId = true
-      if (ignoreUserId) {
-        return 'Dev mode!!'
-      }
+      // const ignoreUserId = true
+      // if (ignoreUserId) {
+      //   return 'Dev mode!!'
+      // }
       return this.$store.state.dCardId
     },
     scannedItems: function () {
@@ -80,7 +79,8 @@ export default {
     }
     bcs.register()
     bcs.on(BarcodeScanner.keys().scanned, (barcode) => {
-      this.$store.commit('pushScannedItem', barcode)
+      this.$webSocket.scanItem(barcode)
+      // this.$store.commit('pushScannedItem', barcode)
     })
   },
   beforeDestroy: function () {

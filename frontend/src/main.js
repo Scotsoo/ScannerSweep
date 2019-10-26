@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import Home from './components/Home'
 import Scan from './components/Scan'
-
+import WebSocketHelper from './helpers/WebSocketHelper'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -27,19 +27,20 @@ const store = new Vuex.Store({
     storeDCard (state, value) {
       state.dCardId = value
     },
-    pushScannedItem (state, value) {
+    pushScannedItem (state, item) {
+      console.log('item', item)
       const statTemp = state.scannedItems
-      let currentItems = statTemp[value]
+      let currentItems = statTemp[item.barcode]
       if (!currentItems) {
         currentItems = {
-          barcode: value,
-          name: 'FILL ME IN AT SOME POINT FROM API???',
+          barcode: item.barcode,
+          name: item.name,
           quantity: 0,
-          price: '222.22' //todo: GET FROM API
+          price: item.price
         }
       }
       currentItems.quantity++
-      statTemp[value] = currentItems
+      statTemp[item.barcode] = currentItems
       state.scannedItems = Object.assign({}, statTemp)
     }
   }
@@ -50,10 +51,16 @@ const router = new VueRouter({
 })
 
 Vue.config.productionTip = false
+const webSocket = new WebSocketHelper()
+Vue.prototype.$webSocket = webSocket
 
-new Vue({
+webSocket.register(this)
+const v = new Vue({
   render: h => h(App),
   router,
   store,
   template: '<App/>',
+  created() {
+  }
 }).$mount('#app')
+Vue.prototype.$webSocket.register(v)

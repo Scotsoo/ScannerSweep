@@ -8,9 +8,11 @@ export default class BarcodeScanner extends EventEmitter {
     this.timeout = null
     this.cachedKeys = []
   }
+
   static keys() {
     return eventKeys
   }
+
   destroy () {
     console.log('destroy called')
     window.removeEventListener('keydown', event => this.keyHandler(event))

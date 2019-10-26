@@ -17,7 +17,7 @@ wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
         console.log(`Recieved message "${message}"`)
     })
-    
+
     console.log(`Connection established to a client!`)
 })
 
