@@ -8,12 +8,12 @@ const wss = new WebSocket.Server({ port: 8080 })
 wss.on('connection', function connection(ws) {
   ws.isAlive = true
   ws.on('pong', heartbeat)
-  this.session = new Session({
+  ws.session = new Session({
       id: uuid.v4(),
       items: []
   })
 
-  this.session.save()
+  ws.session.save()
 
   const interval = setInterval(function ping() {
     wss.clients.forEach(function each(ws) {
@@ -37,7 +37,8 @@ wss.on('connection', function connection(ws) {
     switch (req.action) {
       case "add":
         try {
-          const newProduct = handler.add(req.payload, this)
+          console.log(this)
+          const newProduct = handler.add(req.payload, this.session)
           ws.send(JSON.stringify({
             action: 'added',
             payload: newProduct

@@ -1,8 +1,9 @@
 const Product = require('./models/Product')
 
 class Handler {
-    static add(id, { session }) {
+    static add(id, session) {
         if (!session) throw new Error('No session found')
+        if (!id) throw new Error('No ID provided')
 
         const newProduct = Product.findOne({ id })
 
@@ -10,13 +11,13 @@ class Handler {
             throw new Error(`Not enough stock of ${newProduct.name}`)
         }
 
-        const existingProduct = session.item.find(product => {
+        const existingProduct = session.items.find(product => {
             product.id === newProduct.id
         })
         if (!existingProduct) {
             // new product
             session.items.push({
-                id: product.id,
+                id: newProduct.id,
                 quantity: 1
             })
         } else {
