@@ -1,5 +1,5 @@
 <template>
-  <div class="container hello">
+  <div class="container home-container">
     <img src ="../assets/dale.png" style="width: 10vh" class="dale">
     <br/>
     <img src="../assets/logo.png" style="width:50vw" class="logo">
@@ -91,5 +91,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.home-container {
+  margin-top:5vh;
 }
 </style>

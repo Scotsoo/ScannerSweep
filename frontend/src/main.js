@@ -30,6 +30,7 @@ const store = new Vuex.Store({
   state: {
     dCardId: '',
     scannedItems: {},
+    discountedItems: {},
     websocketSessionId: ''
   },
   mutations: {
@@ -53,8 +54,23 @@ const store = new Vuex.Store({
       state.scannedItems = Object.assign({}, statTemp)
     },
     storeInitData (state, items) {
-      state.scannedItems = Object.assign({}, items)
+      state.scannedItems = Object.assign({}, items.mappedItems)
+      console.log(items)
+      state.discountedItems = Object.assign({}, items.mappedDiscounts)
       // state.websocketSessionId = sessionId
+    },
+    storeDiscount(state, discount) {
+      const statTemp = state.discountedItems
+      let currentItems = statTemp[discount.id]
+      if (!currentItems) {
+        currentItems = {
+          id: discount.id,
+          description: discount.description,
+          amount: discount.amount
+        }
+      }
+      statTemp[discount.id] = currentItems
+      state.discountedItems = Object.assign({}, statTemp)
     }
   }
 })

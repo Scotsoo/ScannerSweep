@@ -16,11 +16,17 @@ function challengeGenerator () {
   setTimeout(async () => {
     const product = await dbHelpers.findRandomProduct()
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
+	const crypticProduct = await dbHelpers.findCrypticProductByProductId(product.id)
 
-    const newChallenge = new Challenge({
+    const newDiscount = await dbHelpers.generateDiscount(product)
+	
+	const newChallenge = new Challenge({
       id: uuid.v4(),
+      discount: newDiscount.id,
       product: product.id,
-      text: `Scan ${product.name}`,
+      text: helpers.coinToss()
+        ? `Be the first to scan ${product.name}`
+        : crypticProduct.message,
       timeRemaining: time
     })
 
@@ -126,35 +132,45 @@ wss.on('connection', function connection(ws) {
            }))
            return
           }
+        const challenge = await dbHelpers.findChallengeWithTimeRemaining()
+
           const newProduct = await handler.add(req.payload, session)
 
+          if (challenge && challenge.product === newProduct.id) {
+            challenge.timeRemaining = 0
+            challenge.save()
+            const discount = await dbHelpers.getDiscountById(challenge.discount)
+
+            session.discounts.push(discount)
+            
+            helpers.send(ws, {
+              action: 'challenge_complete',
+              payload: discount
+            })
+          }
+          
+          session.save()
+          
           helpers.send(ws, {
             action: 'added',
             payload: newProduct
           })
-
-          const challenge = await dbHelpers.findChallengeWithTimeRemaining()
-          if (challenge && challenge.product === newProduct.id) {
-            challenge.timeRemaining = 0
-            challenge.save()
-
-            helpers.send(ws, {
-              action: 'challenge_complete'
-            })
-          }
+          
+          
         }
         catch (e) {
           return console.log(e)
         }
         break;
-      case "init":
+    case "init":
         // let session = sessions[req.session]
         let session = await dbHelpers.getSessionFromId(req.session)
         if(!session) {
             console.log('session not found, creating new one', req.session)
             session = new Session({
                 id: req.session,
-                items: []
+                items: [],
+                discounts: []
             })
         } else {
             console.log('session found for ', req.session)
@@ -166,30 +182,40 @@ wss.on('connection', function connection(ws) {
             let product = await dbHelpers.getProductById(m.id)
             product = JSON.parse(JSON.stringify(product))
             product.quantity = m.quantity
-            console.log('PRODUCT', product)
             return product
         }))
         const mappedItems = {}
         items.forEach(item => {
             mappedItems[item.id] = item
         })
+        const discounts = await Promise.all(session.discounts.map(async m => {
+          let discount = await dbHelpers.getDiscountById(m.id)
+          discount = JSON.parse(JSON.stringify(discount))
+          return discount
+        }))
+        const mappedDiscounts = {}
+        discounts.forEach(discount => {
+          mappedDiscounts[discount.id] = discount
+        })
         ws.send(JSON.stringify({
             action: 'initResponse',
-            payload: mappedItems
+            payload: {
+              mappedItems,
+              mappedDiscounts
+            }
         }))
         break;
-       case "registerTill":
-         console.log(req)
-         tills.register(req.barcode, ws)
-         break;
+    case "registerTill":
+        console.log(req)
+        tills.register(req.barcode, ws)
+        break;
 
-       case "payment":
-         console.log(req.session)
-         let session = await dbHelpers.getSessionFromId(req.session)
-         session.deleteOne()
-         break;
-
-      default:
+    case "payment":
+        console.log(req.session)
+        let session = await dbHelpers.getSessionFromId(req.session)
+        session.deleteOne()
+        break;
+    default:
         console.log(`Invalid action found in message`)
         break;
     }
@@ -197,3 +223,6 @@ wss.on('connection', function connection(ws) {
 
   console.log(`Connection established to a client!`)
 })
+
+
+
