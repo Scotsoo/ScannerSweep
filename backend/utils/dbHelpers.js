@@ -2,6 +2,7 @@ const Challenge = require('../models/Challenge')
 const Product = require('../models/Product')
 const Session = require('../models/Session')
 const Discount = require('../models/Discount')
+const helpers = require('../utils/helpers')
 
 const uuid = require('uuid')
 

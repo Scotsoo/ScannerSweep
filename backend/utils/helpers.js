@@ -6,7 +6,9 @@ function generateRandomFromArrayLength(length) {
 
 function generateRandomChallengeInterval() {
     // every 40-100 seconds
-    return generateRandom(60) + 40
+    const r = generateRandom(30) + 0
+    console.log('random interval', r)
+    return r
 }
 
 function generateRandom(ceiling) {
