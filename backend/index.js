@@ -14,8 +14,8 @@ const tills = new Tills();
 
 function challengeGenerator () {
   setTimeout(async () => {
-    const product = await dbHelpers.findRandomProduct()
-    const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
+    const product = await product.findOne({ id: '000000000048' }).exec()
+    const time = 30
 	const crypticProduct = await dbHelpers.findCrypticProductByProductId(product.id)
 
     const newDiscount = await dbHelpers.generateDiscount(product)
@@ -24,9 +24,7 @@ function challengeGenerator () {
       id: uuid.v4(),
       discount: newDiscount.id,
       product: product.id,
-      text: helpers.coinToss()
-        ? `Be the first to scan ${product.name}`
-        : crypticProduct.message,
+      text: `Be the first to scan ${product.name}`,
       timeRemaining: time
     })
 
@@ -66,7 +64,7 @@ function challengeGenerator () {
     }
 
     setTimeout(recursiveChallenge, 1000, newChallenge.id)
-  }, 1000 * helpers.generateRandomChallengeInterval())
+  }, 1000 * 10
 }
 
 challengeGenerator()
