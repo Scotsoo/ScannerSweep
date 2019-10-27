@@ -116,13 +116,14 @@ wss.on('connection', function connection(ws) {
             const discount = await dbHelpers.getDiscountById(challenge.discount)
 
             session.discounts.push(discount)
-            session.save()
             
             helpers.send(ws, {
               action: 'challenge_complete',
               payload: discount
             })
           }
+          
+          session.save()
           
           helpers.send(ws, {
             action: 'added',
