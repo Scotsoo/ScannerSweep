@@ -113,6 +113,8 @@ wss.on('connection', function connection(ws) {
       case "add":
         try {
           session = await dbHelpers.getSessionFromId(req.session)
+          treasure_hunt.testChallenge(ws, req.payload)
+
           if (req.payload.startsWith("till") || req.payload === '000000000307') {
             console.log("Doing checkout")
 
@@ -182,7 +184,6 @@ wss.on('connection', function connection(ws) {
             })
           }
 
-          treasure_hunt.testChallenge(ws, req.payload)
 
           session.save()
 

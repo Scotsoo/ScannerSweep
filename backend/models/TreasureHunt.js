@@ -1,7 +1,7 @@
 'use strict';
 const hunt = [
   {text: 'Co-operation is key', test: function(payload){return payload == "000000000604"}},
-  {text: 'Invest time for investigation and insight is your reward', test: function(payload){return payload == "000000000598"}},
+  {text: 'Invest time for investigation and this is your reward', test: function(payload){return payload == "000000000598"}},
   {text: 'Bubble, Quick, Binary and Merge - all your collections are this', test: function(payload){return payload == "000000000581"}},
   {text: 'All our mobile networks should run like this...', test: function(payload){return payload == "000000000574"}}
 ]
@@ -37,6 +37,7 @@ class TreasureHunt {
   sendComplete(ws) {
     ws.send(JSON.stringify({action: 'challenge_complete', payload:{description: "treasureHunt", amount: 10.00}}))
     ws.send(JSON.stringify({action: 'challenge_end'}))
+    delete this.active_hunts[ws.session.id]
   }
 
   getChallenge(ws) {
