@@ -23,7 +23,6 @@ class Handler {
             const idx = session.items.findIndex(product => product.id === newProduct.id)
             session.items[idx] = existingProduct
         }
-        session.save()
 
         return newProduct
     }

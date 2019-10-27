@@ -2,7 +2,6 @@ const Challenge = require('../models/Challenge')
 const Product = require('../models/Product')
 const Session = require('../models/Session')
 const Discount = require('../models/Discount')
-const helpers = require('./helpers')
 
 const uuid = require('uuid')
 
@@ -34,7 +33,7 @@ async function findRandomProduct () {
 
 async function generateDiscount (product) {
   const isPercentDiscount = !!Math.round(Math.random())
-  const percentDiscount = helpers.generateRandomDiscountPercent(product)
+  const percentDiscount = helpers.generateRandomDiscountPercent(product.price)
   const flatDiscount = helpers.generateRandomDiscountAmount(product.price)
   const description = `${isPercentDiscount ? `${percentDiscount.percent}%` : `£${flatDiscount.toFixed(2)}`} discount on ${product.name}`
   const discount = new Discount({

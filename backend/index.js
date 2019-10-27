@@ -16,7 +16,6 @@ function challengeGenerator () {
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
 
     const newDiscount = await dbHelpers.generateDiscount(product)
-    // newDiscount.save()
 
     const newChallenge = new Challenge({
       id: uuid.v4(),
@@ -113,17 +112,17 @@ wss.on('connection', function connection(ws) {
           if (challenge && challenge.product === newProduct.id) {
             challenge.timeRemaining = 0
             challenge.save()
-            console.log('challenge', challenge)
             const discount = await dbHelpers.getDiscountById(challenge.discount)
 
             session.discounts.push(discount)
-            session.save()
-            console.log('DISCOUNT', discount)
+            
             helpers.send(ws, {
               action: 'challenge_complete',
               payload: discount
             })
           }
+          
+          session.save()
           
           helpers.send(ws, {
             action: 'added',
