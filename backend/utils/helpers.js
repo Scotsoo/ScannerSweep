@@ -40,12 +40,6 @@ function generateRandomDiscountPercent (productPrice) {
     }
 }
 
-function generateRandomDiscountAmount (productPrice) {
-    const discount = roundToCurrency(generateRandom(productPrice))
-    console.log('fixed discount', discount)
-    return discount
-}
-
 function roundToCurrency (value) {
     return Math.round(value * 100) / 100
 }
@@ -54,7 +48,6 @@ module.exports = {
     broadcast: broadcastWrapper,
     generateRandom,
     generateRandomChallengeInterval,
-    generateRandomDiscountAmount,
     generateRandomDiscountPercent,
     generateRandomFromArrayLength,
     send: sendWrapper
