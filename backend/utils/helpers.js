@@ -31,7 +31,9 @@ function broadcastWrapper(wss, object) {
 
 function generateRandomDiscountPercent (productPrice) {
     const discount = generateRandom(50)
-    const priceAmount = Number((discount * productPrice).toFixed(2))
+    console.log(`discount percent`, discount)
+    const priceAmount = Number(((discount / 100) * productPrice).toFixed(2))
+    console.log('discount percent amount', priceAmount)
     return {
         percent: discount,
         amount: priceAmount
@@ -39,7 +41,9 @@ function generateRandomDiscountPercent (productPrice) {
 }
 
 function generateRandomDiscountAmount (productPrice) {
-    return Number(generateRandom(productPrice).toFixed(2))
+    const discount = Number(generateRandom(productPrice).toFixed(2))
+    console.log('fixed discount', discount)
+    return discount
 }
 
 module.exports = {

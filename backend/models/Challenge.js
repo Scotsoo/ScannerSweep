@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const challengeSchema = new mongoose.Schema({
     id : String,
-    discount : Number,
+    discount : String,
     text : String,
     product : String,
     timeRemaining : Number
