@@ -46,6 +46,7 @@
       </tbody>
     </table>
     <Challenge></Challenge>
+    <DaleGif></DaleGif>
   </div>
 </template>
 
@@ -53,10 +54,11 @@
 import BarcodeScanner from '../helpers/BarcodeScanner'
 const bcs = new BarcodeScanner()
 import Challenge from './Challenge.vue'
+import DaleGif from './DaleGif.vue'
 
 export default {
   name: 'Scan',
-  components: {Challenge},
+  components: {Challenge, DaleGif},
   computed: {
     totalPrice: function () {
       let price = 0
