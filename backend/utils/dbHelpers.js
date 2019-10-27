@@ -34,7 +34,7 @@ async function findRandomProduct () {
 
 async function generateDiscount (product) {
   const isPercentDiscount = !!Math.round(Math.random())
-  const percentDiscount = helpers.generateRandomDiscountPercent(product)
+  const percentDiscount = helpers.generateRandomDiscountPercent(product.price)
   const flatDiscount = helpers.generateRandomDiscountAmount(product.price)
 
   const discount = new Discount({
