@@ -6,8 +6,6 @@ sed -i '/dtoverlay/c\dtoverlay=tft35a:rotate=0' /boot/config.txt
 
 ## Hide cursor
 sudo apt-get install unclutter
-mkdir -p /home/pi/.config/lxsession/LXDE-pi/
-touch /home/pi/.config/lxsession/LXDE-pi/autostart
 echo "@unclutter -idle 0" >> /etc/xdg/lxsession/LXDE-pi/autostart
 
 ## Install node

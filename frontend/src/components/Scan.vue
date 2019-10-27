@@ -36,15 +36,18 @@
         </tr>
       </tbody>
     </table>
+    <Challenge></Challenge>
   </div>
 </template>
 
 <script>
 import BarcodeScanner from '../helpers/BarcodeScanner'
 const bcs = new BarcodeScanner()
+import Challenge from './Challenge.vue'
 
 export default {
   name: 'Scan',
+  components: {Challenge},
   computed: {
     totalPrice: function () {
       let price = 0
