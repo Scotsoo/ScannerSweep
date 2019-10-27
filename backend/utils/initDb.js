@@ -19,6 +19,8 @@ async.parallel([
     (cb) => { new Product({ id : '000000000109', slug : 'pie', name: "Ratio of Circumference and Diameter of a Circle", price: 3.14 }).save(cb) },
     (cb) => { new Product({ id : '8714789810348', slug : 'colgate', name: "Colgate", price: 0.88 }).save(cb) },
     (cb) => { new Product({ id : '00300858', slug : 'pasty', name: "2x Cheesy Bean Puff Pastry Slices", price: 1.20 }).save(cb) },
+    (cb) => { new Product({ id : '5000168207391', slug : 'flip-milk-chocolate', name: "Flipz Milk Chocolate coated pretzels", price: 1 }).save(cb) },
+    (cb) => { new Product({ id : '5057753720438', slug : 'starwberry-flavoured-milk', name: "Tescos Strawberry Flavoured Milk", price: 1 }).save(cb) },
     (cb) => { Session.deleteMany({}, cb) },
     (cb) => { Challenge.deleteMany({}, cb) },
     (cb) => { CrypticProduct.deleteMany({}, cb) },
@@ -31,6 +33,8 @@ async.parallel([
     (cb) => { new CrypticProduct({ productId : '000000000109', message: `Savoury or sweet, baked in a golden pastry. Or maybe you know me from mathematics, it makes no difference to me.` }).save(cb) },
     (cb) => { new CrypticProduct({ productId : '8714789810348', message: `I help to clean parts of you, but I'm not a bar of soap. I help you keep you minty fresh, and I'm used twice a day; I hope!` }).save(cb) },
     (cb) => { new CrypticProduct({ productId : '00300858', message: `Found in refrigerator aisles or near baked goods. You can enjoy me hot or cold; even as a pud!` }).save(cb) },
+    (cb) => { new CrypticProduct({ productId : '5000168207391', message: `All twisted up and smothered in chocolate, these treats will go quick. Don't be late!` }).save(cb) },
+    (cb) => { new CrypticProduct({ productId : '5057753720438', message: `Flavoured dairy is what this product is. "Shake" it up and you'll be a whizz.` }).save(cb) },
     (cb) => { Discount.deleteMany({}, cb) }
 ], (err) => {
     if (err) {

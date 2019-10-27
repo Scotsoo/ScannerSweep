@@ -51,6 +51,16 @@ function challengeGenerator () {
         helpers.broadcast(wss, {
           action: 'challenge_end'
         })
+        wss.clients.forEach(ws => {
+          ws.failedChallenges++
+          if (ws.failedChallenges > 2) {
+            const session = await dbHelpers.getSessionFromId(ws.id)
+            session.deleteOne()
+            helpers.send(ws, {
+              action: 'reset'
+            })
+          }
+        })
         challengeGenerator()
       } else {
         challenge.timeRemaining--
@@ -73,6 +83,7 @@ challengeGenerator()
 
 wss.on('connection', function connection(ws) {
   ws.isAlive = true
+  ws.failedChallenges = 0
 
   function checkClient () {
     console.log('checking for alive clients')
@@ -154,6 +165,8 @@ wss.on('connection', function connection(ws) {
             const discount = await dbHelpers.getDiscountById(challenge.discount)
 
             session.discounts.push(discount)
+
+            ws.failedChallenges--
 
             helpers.send(ws, {
               action: 'challenge_complete',
