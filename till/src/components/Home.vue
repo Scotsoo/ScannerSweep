@@ -1,42 +1,50 @@
 <template>
   <div class="hello">
-    <barcode :value="barcode" :options="{ displayValue: true }"></barcode>
-    <!-- <table class="sticky-table">
-      <thead class="header">
-        <th colspan="2">
-          Product
-        </th>
-        <th>
-          Quantity
-        </th>
-        <th>
-          Price
-        </th>
-      </thead>
-      <tr class="bold total-row">
-        <td colspan="2">
-          Total
-        </td>
-        <td>
-        </td>
-        <td>
-          {{totalPrice}}
-        </td>
-      </tr>
-      <tbody>
-        <tr v-for="scannedItemKey in Object.keys(scannedItems).reverse()" :key="scannedItemKey">
+    <div>
+      <barcode :value="barcode" :options="{ displayValue: true }"></barcode>
+    </div>
+    <div v-if=items>
+      <table class="text-left sticky-table">
+        <thead class="header">
+          <th colspan="2">
+            Product
+          </th>
+          <th>
+            Quantity
+          </th>
+          <th>
+            Price
+          </th>
+        </thead>
+        <tr class="bold total-row">
           <td colspan="2">
-            {{scannedItems[scannedItemKey].name}}
+            Total
           </td>
           <td>
-            {{scannedItems[scannedItemKey].quantity}}
           </td>
           <td>
-            £{{toMoney(calculatePrice(scannedItems[scannedItemKey]))}}
+            {{totalPrice}}
           </td>
         </tr>
-      </tbody>
-    </table> -->
+        <tbody>
+          <tr v-for="scannedItemKey in Object.keys(items).reverse()" :key="scannedItemKey">
+            <td colspan="2">
+              {{items[scannedItemKey].name}}
+            </td>
+            <td>
+              {{items[scannedItemKey].quantity}}
+            </td>
+            <td>
+              £{{toMoney(calculatePrice(items[scannedItemKey]))}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <b-button variant="success" v-on:click="payment">Pay</b-button>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -53,16 +61,53 @@ export default {
   data () {
     return {
       barcode: 'till000001',
-      session: "000000000130",
-      items: [
-        {
-          _id: "5db5102f50d1db1a20e68d62", id: "000000000048", quantity: 3
-        }
-      ]
+      session: null,
+      items: null,
+      ws: null
+    }
+  },
+  computed: {
+    totalPrice: function () {
+      let price = 0
+      Object.values(this.items).forEach(data => {
+        price += this.calculatePrice(data)
+      })
+      return `£${this.toMoney(price)}`
+    },
+    scannedItems: function () {
+      return this.items
+    }
+  },
+  methods: {
+    reset() {
+      this.items = null
+      this.session = null
+    },
+    payment() {
+      alert("Thanks!")
+      this.ws.send(JSON.stringify({
+        'action': 'payment',
+        'session': this.session
+      }))
+      this.reset()
+    },
+    calculatePrice (item) {
+      return (item.quantity * item.price)
+    },
+    toMoney (value) {
+      return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
     }
   },
   created: function() {
-    const ws = new WebSocketHelper(this.barcode)
+    this.ws = new WebSocketHelper(this.barcode)
+    this.ws.listen((data) => {
+      data = JSON.parse(data.data);
+      if (data.action == "checkout") {
+        console.log(data.payload)
+        this.session = data.payload.id
+        this.items = data.payload.items
+      }
+    })
   }
 }
 </script>
@@ -83,4 +128,33 @@ li {
 a {
   color: #42b983;
 }
+<style scoped>
+.total-row {
+  background-color:#D97904;
+}
+.header {
+  background-color:#8C0B47;
+}
+.sticky-table{
+  width:100vw;
+}
+.bold  {
+  font-weight: bolder
+}
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+</style>
+
 </style>

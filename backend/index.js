@@ -124,8 +124,7 @@ wss.on('connection', function connection(ws) {
             ws.send(JSON.stringify({
              action: 'reset'
            }))
-           session.deleteOne()
-            return
+           return
           }
           const newProduct = await handler.add(req.payload, session)
 
@@ -182,6 +181,12 @@ wss.on('connection', function connection(ws) {
        case "registerTill":
          console.log(req)
          tills.register(req.barcode, ws)
+         break;
+
+       case "payment":
+         console.log(req.session)
+         let session = await dbHelpers.getSessionFromId(req.session)
+         session.deleteOne()
          break;
 
       default:

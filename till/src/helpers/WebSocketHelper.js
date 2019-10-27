@@ -10,9 +10,13 @@ export default class WebSocketHelper {
     this.websocket.addEventListener('message', cb);
   }
 
+  send(data) {
+    this.websocket.send(data)
+  }
+
   initSession(barcode) {
     console.log("here")
-    this.websocket.send(JSON.stringify({'action': 'registerTill', 'barcode':barcode}))
+    this.send(JSON.stringify({'action': 'registerTill', 'barcode':barcode}))
   }
 
   scanItem (barcode) {
