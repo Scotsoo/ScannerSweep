@@ -9,7 +9,7 @@ class Handler {
 
         if (!newProduct) throw new Error(`Unable to find product with id "${id}"`)
 
-        if (challengeProductId === newProduct.id) {
+        if (challengeProductId && challengeProductId === newProduct.id) {
             newProduct.price*= discount
         }
 

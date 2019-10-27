@@ -104,7 +104,10 @@ wss.on('connection', function connection(ws) {
           const session = await dbHelpers.getSessionFromId(req.session)
           const challenge = await dbHelpers.findChallengeWithTimeRemaining()
           
-          const newProduct = await handler.add(req.payload, session, challenge.product, 0.8)
+          const challengeProduct = challenge
+            ? challenge.product
+            : null
+          const newProduct = await handler.add(req.payload, session, challengeProduct, 0.8)
 
           if (challenge && challenge.product === newProduct.id) {
             challenge.timeRemaining = 0
