@@ -106,10 +106,25 @@ wss.on('connection', function connection(ws) {
           const session = await dbHelpers.getSessionFromId(req.session)
           if (req.payload.startsWith("till")) {
             console.log("Doing checkout")
-            tills.checkoutSession(session, req.payload)
+
+            const items = await Promise.all(session.items.map(async m => {
+                let product = await dbHelpers.getProductById(m.id)
+                product = JSON.parse(JSON.stringify(product))
+                product.quantity = m.quantity
+                console.log('PRODUCT', product)
+                return product
+            }))
+            const mappedItems = {}
+            items.forEach(item => {
+                mappedItems[item.id] = item
+            })
+            tills.checkoutSession( {
+              id: session.id,
+              items: mappedItems}, req.payload)
             ws.send(JSON.stringify({
              action: 'reset'
            }))
+           session.deleteOne()
             return
           }
           const newProduct = await handler.add(req.payload, session)
