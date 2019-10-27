@@ -25,7 +25,7 @@ function challengeGenerator () {
       id: uuid.v4(),
       discount: newDiscount.id,
       product: product.id,
-      text: `Be the first to scan ${product.name}`,
+      text: crypticProduct.message,
       timeRemaining: time
     })
 
@@ -160,7 +160,7 @@ wss.on('connection', function connection(ws) {
             })
           }
           const t = true
-          if (helpers.generateRandom(9) === 0) {
+          if (t) {
             const gifs = [
               'https://media1.tenor.com/images/8dd6b22e13deb687fe7afb2b3d1dcc0c/tenor.gif?itemid=11680207',
               'https://media.giphy.com/media/FKijXRJNJ4KJi/giphy.gif',
