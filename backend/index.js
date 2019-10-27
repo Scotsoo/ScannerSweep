@@ -19,7 +19,7 @@ function challengeGenerator () {
 	const crypticProduct = await dbHelpers.findCrypticProductByProductId(product.id)
 
     const newDiscount = await dbHelpers.generateDiscount(product)
-	
+
 	const newChallenge = new Challenge({
       id: uuid.v4(),
       discount: newDiscount.id,
@@ -96,6 +96,7 @@ wss.on('connection', function connection(ws) {
   })
 
   ws.on('message', async function incoming(message) {
+    let session
     console.log(`Received message "${message.trim()}"`)
     try {
       req = JSON.parse(message)
@@ -109,7 +110,7 @@ wss.on('connection', function connection(ws) {
     switch (req.action) {
       case "add":
         try {
-          const session = await dbHelpers.getSessionFromId(req.session)
+          session = await dbHelpers.getSessionFromId(req.session)
           if (req.payload.startsWith("till")) {
             console.log("Doing checkout")
 
@@ -142,21 +143,21 @@ wss.on('connection', function connection(ws) {
             const discount = await dbHelpers.getDiscountById(challenge.discount)
 
             session.discounts.push(discount)
-            
+
             helpers.send(ws, {
               action: 'challenge_complete',
               payload: discount
             })
           }
-          
+
           session.save()
-          
+
           helpers.send(ws, {
             action: 'added',
             payload: newProduct
           })
-          
-          
+
+
         }
         catch (e) {
           return console.log(e)
@@ -164,7 +165,7 @@ wss.on('connection', function connection(ws) {
         break;
     case "init":
         // let session = sessions[req.session]
-        let session = await dbHelpers.getSessionFromId(req.session)
+        session = await dbHelpers.getSessionFromId(req.session)
         if(!session) {
             console.log('session not found, creating new one', req.session)
             session = new Session({
@@ -212,7 +213,7 @@ wss.on('connection', function connection(ws) {
 
     case "payment":
         console.log(req.session)
-        let session = await dbHelpers.getSessionFromId(req.session)
+        session = await dbHelpers.getSessionFromId(req.session)
         session.deleteOne()
         break;
     default:
