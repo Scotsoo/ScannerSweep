@@ -12,17 +12,28 @@
           Price
         </th>
       </thead>
-      <tr class="bold total-row">
-        <td colspan="2">
-          Total
-        </td>
-        <td>
-        </td>
-        <td>
-          {{totalPrice}}
-        </td>
-      </tr>
       <tbody>
+        <tr class="bold total-row">
+          <td colspan="2">
+            Total
+          </td>
+          <td>
+          </td>
+          <td>
+            {{totalPrice}}
+          </td>
+        </tr>
+        <tr v-for="discountedItem in Object.values(discountedItems).reverse()" :key="discountedItem.id">
+          <td colspan="2">
+            {{discountedItem.description}}
+          </td>
+          <td>
+            {{discountedItem.amount}}
+          </td>
+          <td>
+            -£{{toMoney(discountedItem.amount)}}
+          </td>
+        </tr>
         <tr v-for="scannedItem in Object.values(scannedItems).reverse()" :key="scannedItem.id">
           <td colspan="2">
             {{scannedItem.name}}
@@ -54,6 +65,9 @@ export default {
       Object.values(this.$store.state.scannedItems).forEach(data => {
         price += this.calculatePrice(data)
       })
+      Object.values(this.$store.state.discountedItems).forEach(data => {
+        price -= data.amount
+      })
       return `£${this.toMoney(price)}`
     },
     userId: function() {
@@ -65,6 +79,9 @@ export default {
     },
     scannedItems: function () {
       return this.$store.state.scannedItems
+    },
+    discountedItems: function () {
+      return this.$store.state.discountedItems
     }
   },
   methods: {

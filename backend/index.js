@@ -15,8 +15,9 @@ function challengeGenerator () {
     const product = await dbHelpers.findRandomProduct()
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
 
-    const newDiscount = dbHelpers.generateDiscount(product.price)
-    newDiscount.save()
+    const newDiscount = await dbHelpers.generateDiscount(product.price)
+    console.log('new discount', newDiscount)
+    // newDiscount.save()
 
     const newChallenge = new Challenge({
       id: uuid.v4(),
@@ -107,18 +108,18 @@ wss.on('connection', function connection(ws) {
         try {
           const session = await dbHelpers.getSessionFromId(req.session)
           const challenge = await dbHelpers.findChallengeWithTimeRemaining()
-          
+
           const newProduct = await handler.add(req.payload, session)
 
           if (challenge && challenge.product === newProduct.id) {
             challenge.timeRemaining = 0
             challenge.save()
-
-            const discount = dbHelpers.getDiscountById(challenge.discount)
+            console.log('challenge', challenge)
+            const discount = await dbHelpers.getDiscountById(challenge.discount)
 
             session.discounts.push(discount)
             session.save()
-            
+            console.log('DISCOUNT', discount)
             helpers.send(ws, {
               action: 'challenge_complete',
               payload: discount
@@ -156,7 +157,6 @@ wss.on('connection', function connection(ws) {
             let product = await dbHelpers.getProductById(m.id)
             product = JSON.parse(JSON.stringify(product))
             product.quantity = m.quantity
-            console.log('PRODUCT', product)
             return product
         }))
         const mappedItems = {}
