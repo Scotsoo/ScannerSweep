@@ -1,9 +1,18 @@
 <template>
   <div>
     <transition name="fade">
-      <div v-if="this.challenge" class="challenge fixed-bottom">
-        <p class="text-right">{{ formattedTime }} </p>
-        <p class="text-center">{{ this.challenge.text }}</p>
+      <div v-if="this.challenge" class="challenge fixed-bottom inline-block">
+        <div class="inline-block left">
+          <h4 class="text-left">Dale Says:</h4>
+          <p class="text-center">{{ this.challenge.text }}</p>
+          <p class="text-center">{{ formattedTime }}</p>
+        </div>
+        <div clas="inline-block right pull-right">
+          <br/>
+          <img class="head" src="../assets/head.png">
+          <br/>
+          <img class="chin" src="../assets/chin.png">
+        </div>
       </div>
     </transition>
   </div>
@@ -45,7 +54,11 @@
         if (time <= 0) {
           formatted = "Finished!"
         }
-        return formatted
+        let rem = 'remain'
+        if (time === 1) {
+          rem += 's'
+        }
+        return formatted + ' ' + rem
       }
     },
     methods: {
@@ -134,10 +147,82 @@
     }
 </script>
 <style scoped>
+.left {
+  width: 180px;
+  float:left;
+}
+.right {
+  width: 100px;
+}
+.inline-block {
+  display: inline-block
+}
+@keyframes head {
+  100% {
+    transform: rotate(15deg)
+  }
+  70% {
+    transform: rotate(10deg)
+  }
+  70% {
+    transform: rotate(0deg)
+  }
+  50% {
+    transform: rotate(11deg)
+  }
+  35% {
+    transform: rotate(11deg)
+  }
+  25% {
+    transform: rotate(19deg)
+  }
+  15% {
+    transform: rotate(12deg)
+  }
+  0% {
+    transform: rotate(15deg)
+  }
+}
+@keyframes chin {
+  100% {
+    transform: translate(0) rotate(-15deg)
+  }
+  70% {
+    transform: translate(0)  rotate(-10deg)
+  }
+  70% {
+    transform: translate(0)  rotate(-0deg)
+  }
+  50% {
+    transform: translate(0)  rotate(-11deg)
+  }
+  35% {
+    transform: translate(0)  rotate(-11deg)
+  }
+  25% {
+    transform: translate(0)  rotate(-19deg)
+  }
+  15% {
+    transform: translate(0)  rotate(-12deg)
+  }
+  0% {
+    transform: translate(0) rotate(-15deg)
+  }
+}
+.head {
+  width: 20%;
+  animation: head 2s infinite linear;
+
+}
+.chin {
+  width: 20%;
+  animation: chin 3s infinite linear;
+}
   .challenge {
     /*border: 1px solid #000;*/
     border-radius: 5px 5px 0px 0px;
     max-width: 300px;
+    width: 300px;
     margin:auto;
     background-color: #D97904;
   }
