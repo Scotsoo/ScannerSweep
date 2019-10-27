@@ -11,6 +11,7 @@ class Handler {
 
         if (challengeProductId && challengeProductId === newProduct.id) {
             newProduct.price*= discount
+            newProduct.price = +newProduct.price.toFixed(2)
         }
 
         const existingProduct = session.items.find(product => {
