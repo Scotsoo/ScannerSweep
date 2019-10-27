@@ -53,7 +53,7 @@ function challengeGenerator () {
           payload: challenge
         })
 
-        return setTimeout(recursiveChallenge, 1000, id)
+        setTimeout(recursiveChallenge, 1000, id)
       }
     }
 
@@ -78,11 +78,9 @@ wss.on('connection', function connection(ws) {
       console.log('issued ping')
       ws.ping(null, false, true)
     })
-
-    setTimeout(checkClient, 60000)
   }
 
-  setTimeout(checkClient, 60000)
+  setInterval(checkClient, 60000)
 
   ws.on('pong', () => {
     console.log('pong received. marked alive')
