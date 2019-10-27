@@ -2,9 +2,9 @@
   <div>
     <transition name="fade">
       <div v-if="this.challenge" class="challenge fixed-bottom inline-block">
-        <div class="inline-block left">
-          <h4 class="text-left">Dale Says:</h4>
-          <p class="text-center">{{ this.challenge.text }}</p>
+        <div class="inline-block left" style="height:20vh">
+          <h4 class="text-left" style="margin-bottom:5px">Dale Says:</h4>
+          <p class="text-center"  style="margin-bottom:5px">{{ this.challenge.text }}</p>
           <p class="text-center">{{ formattedTime }}</p>
         </div>
         <div clas="inline-block right pull-right">
