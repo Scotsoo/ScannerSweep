@@ -1,7 +1,7 @@
 const Product = require('./models/Product')
 
 class Handler {
-    static async add(id, session) {
+    static async add(id, session, challengeProductId, discount) {
         if (!session) throw new Error('No session found')
         if (!id) throw new Error('No ID provided')
 
@@ -9,11 +9,12 @@ class Handler {
 
         if (!newProduct) throw new Error(`Unable to find product with id "${id}"`)
 
-        if (newProduct.quantity < 1) {
-            throw new Error(`Not enough stock of ${newProduct.name}`)
+        if (challengeProductId === newProduct.id) {
+            newProduct.price*= discount
         }
+
         const existingProduct = session.items.find(product => {
-            return product.id === newProduct.id
+            return product.id === newProduct.id && product.price === newProduct.price
         })
 
         if (!existingProduct) {
@@ -29,7 +30,6 @@ class Handler {
             const idx = session.items.findIndex(product => product.id === newProduct.id)
             session.items[idx] = existingProduct
         }
-        newProduct.save()
         session.save()
 
         return newProduct

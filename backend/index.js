@@ -102,22 +102,25 @@ wss.on('connection', function connection(ws) {
       case "add":
         try {
           const session = await dbHelpers.getSessionFromId(req.session)
-          const newProduct = await handler.add(req.payload, session)
+          const challenge = await dbHelpers.findChallengeWithTimeRemaining()
+          
+          const newProduct = await handler.add(req.payload, session, challenge.product, 0.8)
+
+          if (challenge && challenge.product === newProduct.id) {
+            challenge.timeRemaining = 0
+            challenge.save()
+            
+            helpers.send(ws, {
+              action: 'challenge_complete'
+            })
+          }
           
           helpers.send(ws, {
             action: 'added',
             payload: newProduct
           })
           
-          const challenge = await dbHelpers.findChallengeWithTimeRemaining()
-          if (challenge && challenge.product === newProduct.id) {
-            challenge.timeRemaining = 0
-            challenge.save()
-
-            helpers.send(ws, {
-              action: 'challenge_complete'
-            })
-          }
+          
         }
         catch (e) {
           return console.log(e)
