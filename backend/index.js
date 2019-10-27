@@ -15,8 +15,12 @@ function challengeGenerator () {
     const product = await dbHelpers.findRandomProduct()
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
 
+    const newDiscount = dbHelpers.generateDiscount(product.price)
+    newDiscount.save()
+
     const newChallenge = new Challenge({
       id: uuid.v4(),
+      discount: newDiscount.id,
       product: product.id,
       text: `Scan ${product.name}`,
       timeRemaining: time
@@ -104,17 +108,20 @@ wss.on('connection', function connection(ws) {
           const session = await dbHelpers.getSessionFromId(req.session)
           const challenge = await dbHelpers.findChallengeWithTimeRemaining()
           
-          const challengeProduct = challenge
-            ? challenge.product
-            : null
-          const newProduct = await handler.add(req.payload, session, challengeProduct, 0.8)
+          const newProduct = await handler.add(req.payload, session)
 
           if (challenge && challenge.product === newProduct.id) {
             challenge.timeRemaining = 0
             challenge.save()
+
+            const discount = dbHelpers.getDiscountById(challenge.discount)
+
+            session.discounts.push(discount)
+            session.save()
             
             helpers.send(ws, {
-              action: 'challenge_complete'
+              action: 'challenge_complete',
+              payload: discount
             })
           }
           
@@ -136,7 +143,8 @@ wss.on('connection', function connection(ws) {
             console.log('session not found, creating new one', req.session)
             session = new Session({
                 id: req.session,
-                items: []
+                items: [],
+                discounts: []
             })
         } else {
             console.log('session found for ', req.session)
@@ -147,7 +155,6 @@ wss.on('connection', function connection(ws) {
         const items = await Promise.all(session.items.map(async m => {
             let product = await dbHelpers.getProductById(m.id)
             product = JSON.parse(JSON.stringify(product))
-            product.quantity = m.quantity
             console.log('PRODUCT', product)
             return product
         }))
@@ -155,9 +162,21 @@ wss.on('connection', function connection(ws) {
         items.forEach(item => {
             mappedItems[item.id] = item
         })
+        const discounts = await Promise.all(session.discounts.map(async m => {
+          let discount = await dbHelpers.getDiscountById(m.id)
+          discount = JSON.parse(JSON.stringify(discount))
+          return discount
+        }))
+        const mappedDiscounts = {}
+        discounts.forEach(discount => {
+          mappedDiscounts[discount.id] = discount
+        })
         ws.send(JSON.stringify({
             action: 'initResponse',
-            payload: mappedItems
+            payload: {
+              mappedItems,
+              mappedDiscounts
+            }
         }))
         break;
 

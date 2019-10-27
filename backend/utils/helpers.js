@@ -29,10 +29,25 @@ function broadcastWrapper(wss, object) {
     console.log(`Sent to ${clients} client/s:`, object)
 }
 
+function generateRandomDiscountPercent (productPrice) {
+    const discount = generateRandom(50)
+    const priceAmount = +(discount * productPrice).toFixed(2)
+    return {
+        percent: discount,
+        amount: priceAmount
+    }
+}
+
+function generateRandomDiscountAmount (productPrice) {
+    return +generateRandom(productPrice).toFixed(2)
+}
+
 module.exports = {
     broadcast: broadcastWrapper,
     generateRandom,
     generateRandomChallengeInterval,
+    generateRandomDiscountAmount,
+    generateRandomDiscountPercent,
     generateRandomFromArrayLength,
     send: sendWrapper
 }

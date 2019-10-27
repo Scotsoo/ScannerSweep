@@ -1,8 +1,11 @@
 const Challenge = require('../models/Challenge')
 const Product = require('../models/Product')
 const Session = require('../models/Session')
+const Discount = require('../models/Discount')
+const helpers = require('./helpers')
 
 const helpers = require('./helpers')
+const uuid = require('uuid')
 
 async function getSessionFromId (id) {
   const session = await Session.findOne({ id }).exec()
@@ -30,11 +33,36 @@ async function findRandomProduct () {
   return allProducts[helpers.generateRandomFromArrayLength(allProducts.length)]
 }
 
+async function generateDiscount (product) {
+  const isPercentDiscount = !!Math.round(Math.random())
+  const percentDiscount = helpers.generateRandomDiscountPercent(product)
+  const flatDiscount = helpers.generateRandomDiscountAmount(product.price)
+
+  const discount = new Discount({
+    id: uuid.v4(),
+    amount: isPercentDiscount
+      ? percentDiscount.amount
+      : flatDiscount,
+    description: `${isPercentDiscount ? `${percentDiscount.percent}%` : `£${flatDiscount.toFixed(2)}`} discount on ${product.name}`
+  })
+
+  discount.save()
+
+  return discount
+}
+
+async function getDiscountById (id) {
+  const discount = await Discount.findOne({ id }).exec()
+  return discount
+}
+
 
 module.exports = {
+  generateDiscount,
+  getDiscountById,
+  getProductById,
   getSessionFromId,
   findChallengeById,
   findChallengeWithTimeRemaining,
-  findRandomProduct,
-  getProductById
+  findRandomProduct
 }
