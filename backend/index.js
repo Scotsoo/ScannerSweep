@@ -124,6 +124,12 @@ wss.on('connection', function connection(ws) {
               payload: discount
             })
           }
+
+          if (helpers.generateRandom(9) === 0) {
+            helpers.send(ws, {
+              action: 'winton'
+            })
+          }
           
           session.save()
           
