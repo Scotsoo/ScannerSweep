@@ -39,6 +39,9 @@
       formattedTime: function () {
         // `this` points to the vm instance
         let time = this.challenge.timeRemaining
+        if (!time) {
+          return ""
+        }
         let formatted = ''
         let units = 'second'
 
@@ -113,7 +116,9 @@
         },
         registerChallenge(eventDetails){
           console.log(eventDetails)
-          this.challenge = eventDetails
+          if (!this.challenge) {
+            this.challenge = eventDetails
+          }
           // this.popToast()
         },
         updateChallenge(eventDetails) {
@@ -121,10 +126,11 @@
           if (!this.challenge) {
             return //this.registerChallenge(eventDetails)
           }
-
-          this.challenge = eventDetails
-          if (this.challenge.timeReamining == 0) {
-            this.challengeEnd(eventDetails)
+          if (this.challenge.id == eventDetails.id) {
+            this.challenge = eventDetails
+            if (this.challenge.timeReamining == 0) {
+              this.challengeEnd(eventDetails)
+            }
           }
         },
         challengeComplete(eventDetails) {

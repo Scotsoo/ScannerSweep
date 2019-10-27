@@ -7,10 +7,12 @@ const uuid = require('uuid')
 const dbHelpers = require('./utils/dbHelpers')
 const helpers = require('./utils/helpers')
 const Tills = require("./models/Tills.js")
+const TreasureHunt = require("./models/TreasureHunt.js")
 
 const wss = new WebSocket.Server({ port: 8086 })
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
 const tills = new Tills();
+const treasure_hunt = new TreasureHunt()
 
 function challengeGenerator () {
   setTimeout(async () => {
@@ -111,6 +113,8 @@ wss.on('connection', function connection(ws) {
       case "add":
         try {
           session = await dbHelpers.getSessionFromId(req.session)
+          treasure_hunt.testChallenge(ws, req.payload)
+
           if (req.payload.startsWith("till") || req.payload === '000000000307') {
             console.log("Doing checkout")
 
@@ -145,7 +149,9 @@ wss.on('connection', function connection(ws) {
            return
           }
         const challenge = await dbHelpers.findChallengeWithTimeRemaining()
-
+          if (req.payload == '000000000314') {
+            return treasure_hunt.setChallenge(ws);
+          }
           const newProduct = await handler.add(req.payload, session)
 
           if (challenge && challenge.product === newProduct.id) {
@@ -177,6 +183,7 @@ wss.on('connection', function connection(ws) {
               payload: gifs[r]
             })
           }
+
 
           session.save()
 
