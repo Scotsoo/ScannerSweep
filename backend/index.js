@@ -160,6 +160,23 @@ wss.on('connection', function connection(ws) {
               payload: discount
             })
           }
+          const t = true
+          if (helpers.generateRandom(9) === 0) {
+            const gifs = [
+              'https://media1.tenor.com/images/8dd6b22e13deb687fe7afb2b3d1dcc0c/tenor.gif?itemid=11680207',
+              'https://media.giphy.com/media/FKijXRJNJ4KJi/giphy.gif',
+              'https://media.giphy.com/media/FkzZKgDzvpIEo/giphy.gif',
+              'https://media1.tenor.com/images/9bc60045bf988c03ebdbe09e50b20622/tenor.gif?itemid=11677344',
+              'https://media1.tenor.com/images/fb746d001234747675d109cc6851d263/tenor.gif',
+              'https://media.giphy.com/media/3o7WIuUib37DlSag8w/giphy.gif'
+
+            ]
+            const r = helpers.generateRandom(gifs.length)
+            helpers.send(ws, {
+              action: 'winton',
+              payload: gifs[r]
+            })
+          }
 
           session.save()
 
