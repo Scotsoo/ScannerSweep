@@ -27,9 +27,7 @@
           <td colspan="2">
             {{discountedItem.description}}
           </td>
-          <td>
-            {{discountedItem.amount}}
-          </td>
+          <td>1</td>
           <td>
             -£{{toMoney(discountedItem.amount)}}
           </td>

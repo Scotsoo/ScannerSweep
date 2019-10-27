@@ -115,7 +115,8 @@
           }
         },
         challengeComplete(eventDetails) {
-          eventDetails
+          this.$store.commit('storeDiscount', eventDetails)
+          // console.log('eventDetails', eventDetails)
           this.challenge.text = "Congratulations!"
           this.challenge.success = true
         },
