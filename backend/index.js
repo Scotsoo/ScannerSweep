@@ -14,7 +14,7 @@ function challengeGenerator () {
   setTimeout(async () => {
     const product = await dbHelpers.findRandomProduct()
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
-    const crypticProduct = dbHelpers.findCrypticProductByProductId(product.id)
+    const crypticProduct = await dbHelpers.findCrypticProductByProductId(product.id)
 
     const newChallenge = new Challenge({
       id: uuid.v4(),
