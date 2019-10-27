@@ -8,7 +8,7 @@
     <br/>
     <!-- <h1 class="scanner">Scanner</h1> -->
     <!-- <h1 class="sweep">SWEEP</h1> -->
-    <h2>Scan your DCard to begin</h2>
+    <h2>Scan your D-Card to begin</h2>
   </div>
 </template>
 
