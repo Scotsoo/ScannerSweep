@@ -1,10 +1,9 @@
 <template>
   <div>
-    <b-button @click="fakeChallengeCreate">Show Toast with custom content</b-button>
     <transition name="fade">
       <div v-if="this.challenge" class="challenge fixed-bottom">
         <p class="text-right">{{ formattedTime }} </p>
-        <p class="text-center">{{ this.challenge.message }}</p>
+        <p class="text-center">{{ this.challenge.text }}</p>
       </div>
     </transition>
   </div>
@@ -22,16 +21,15 @@
       }
     },
     created : function() {
-      this.$nextTick(function () {
-        console.log(this.$webSocket);
-        this.setupEventListeners()
-      })
+      console.log(this.$webSocket);
+      this.setupEventListeners()
+
     },
     computed: {
       // a computed getter
       formattedTime: function () {
         // `this` points to the vm instance
-        let time = this.challenge.time
+        let time = this.challenge.timeRemaining
         let formatted = ''
         let units = 'second'
 
@@ -56,13 +54,13 @@
           const data = {
             action: 'challenge',
             message: 'Kill all humans',
-            time: 30
+            timeRemaining: 30
           }
           this.registerChallenge(data)
           const interval = setInterval(()=>{
-            data.time--
+            data.timeRemaining--
             this.updateChallenge(data);
-            if (data.time == 0) {
+            if (data.timeRemaining == 0) {
               clearInterval(interval)
             }
           }, 1000)
@@ -83,7 +81,21 @@
 
         setupEventListeners() {
           console.log(this.$webSocket.listen((data) => {
-            console.log(data);
+            console.log(data.data);
+            data = JSON.parse(data.data);
+            if (data.action == "challenge") {
+              if (!this.challenge) {
+                this.registerChallenge(data.payload)
+              } else {
+                this.updateChallenge(data.payload)
+              }
+            }
+            if (data.action == "challenge_complete") {
+              this.challengeComplete(data.payload)
+            }
+            if (data.action == "challenge_end") {
+              this.challengeEnd(data.payload)
+            }
           }))
         },
         registerChallenge(eventDetails){
@@ -94,17 +106,25 @@
         updateChallenge(eventDetails) {
           console.log("update called")
           if (!this.challenge) {
-            return
+            return //this.registerChallenge(eventDetails)
           }
 
           this.challenge = eventDetails
-          if (this.challenge.time == 0) {
+          if (this.challenge.timeReamining == 0) {
             this.challengeEnd(eventDetails)
           }
+        },
+        challengeComplete(eventDetails) {
+          eventDetails
+          this.challenge.text = "Congratulations!"
+          this.challenge.success = true
         },
         challengeEnd(eventDetails) {
           eventDetails
           console.log("ended")
+          if (!this.challenge.success) {
+            this.challenge.text = "Challenge finished :("
+          }
           setTimeout(()=>{
             this.challenge = null;
           }, 5000)

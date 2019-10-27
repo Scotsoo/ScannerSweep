@@ -4,17 +4,14 @@
     <h1 class="scanner">Scanner</h1>
     <h1 class="sweep">SWEEP</h1>
     <h2>Scan your DCard to begin</h2>
-    <Challenge></Challenge>
   </div>
 </template>
 
 <script>
 import BarcodeScanner from '../helpers/BarcodeScanner'
-import Challenge from './Challenge.vue'
 const bcs = new BarcodeScanner()
 export default {
   name: 'Home',
-  components: {Challenge},
   created: function () {
     bcs.register()
     bcs.on(BarcodeScanner.keys().scanned, (barcode) => {

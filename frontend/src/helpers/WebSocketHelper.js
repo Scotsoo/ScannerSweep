@@ -31,6 +31,10 @@ export default class WebSocketHelper {
     this.websocket.addEventListener('message', cb);
   }
 
+  initSession(barcode) {
+    this.websocket.send(this.constructWebSocketItem('init', barcode))
+  }
+
   scanItem (barcode) {
     const item = this.constructWebSocketItem('add', barcode)
     this.websocket.send(item)
