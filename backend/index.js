@@ -64,7 +64,7 @@ function challengeGenerator () {
     }
 
     setTimeout(recursiveChallenge, 1000, newChallenge.id)
-  }, 1000 * 10
+  }, 1000 * 10)
 }
 
 challengeGenerator()
