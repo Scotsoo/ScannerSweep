@@ -1,5 +1,3 @@
 # ScannerSweep
-Hack Manchester 2019
 
-
-MAKE THE NEW ORDER STOP
+![Just... Dale](/frontend/src/assets/dale.png?raw=true)
