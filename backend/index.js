@@ -16,7 +16,6 @@ function challengeGenerator () {
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
 
     const newDiscount = dbHelpers.generateDiscount(product.price)
-    newDiscount.save()
 
     const newChallenge = new Challenge({
       id: uuid.v4(),
