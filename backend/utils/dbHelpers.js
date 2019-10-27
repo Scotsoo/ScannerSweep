@@ -1,6 +1,7 @@
 const Challenge = require('../models/Challenge')
 const Product = require('../models/Product')
 const Session = require('../models/Session')
+const CrypticProduct = require('../models/CrypticProduct')
 
 const helpers = require('./helpers')
 
@@ -30,11 +31,17 @@ async function findRandomProduct () {
   return allProducts[helpers.generateRandomFromArrayLength(allProducts.length)]
 }
 
+async function findCrypticProductByProductId (id) {
+  const crypticProduct = await crypticProduct.findOne({ productId: id }).exec()
+  return crypticProduct
+}
+
 
 module.exports = {
   getSessionFromId,
   findChallengeById,
   findChallengeWithTimeRemaining,
+  findCrypticProductByProductId,
   findRandomProduct,
   getProductById
 }

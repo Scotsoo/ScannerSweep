@@ -14,11 +14,14 @@ function challengeGenerator () {
   setTimeout(async () => {
     const product = await dbHelpers.findRandomProduct()
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
+    const crypticProduct = dbHelpers.findCrypticProductByProductId(product.id)
 
     const newChallenge = new Challenge({
       id: uuid.v4(),
       product: product.id,
-      text: `Scan ${product.name}`,
+      text: helpers.coinToss()
+        ? `Be the first to scan ${product.name}`
+        : crypticProduct.message,
       timeRemaining: time
     })
 

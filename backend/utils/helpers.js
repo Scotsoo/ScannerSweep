@@ -29,8 +29,13 @@ function broadcastWrapper(wss, object) {
     console.log(`Sent to ${clients} client/s:`, object)
 }
 
+function coinToss () {
+    return !!Math.round(Math.random())
+}
+
 module.exports = {
     broadcast: broadcastWrapper,
+    coinToss,
     generateRandom,
     generateRandomChallengeInterval,
     generateRandomFromArrayLength,
