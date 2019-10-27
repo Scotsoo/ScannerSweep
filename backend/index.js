@@ -111,7 +111,7 @@ wss.on('connection', function connection(ws) {
       case "add":
         try {
           session = await dbHelpers.getSessionFromId(req.session)
-          if (req.payload.startsWith("till")) {
+          if (req.payload.startsWith("till") || req.payload === '000000000307') {
             console.log("Doing checkout")
 
             const items = await Promise.all(session.items.map(async m => {
