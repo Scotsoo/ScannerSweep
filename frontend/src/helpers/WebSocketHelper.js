@@ -23,6 +23,8 @@ export default class WebSocketHelper {
       } else if (message.action === 'initResponse') {
         console.log('initresponse', message)
         this.vueContext.$store.commit('storeInitData', message.payload, true)
+      } else if (message.action === 'reset') {
+        location.reload()
       }
     })
   }

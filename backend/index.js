@@ -6,9 +6,11 @@ const Challenge = require('./models/Challenge')
 const uuid = require('uuid')
 const dbHelpers = require('./utils/dbHelpers')
 const helpers = require('./utils/helpers')
+const Tills = require("./models/Tills.js")
 
 const wss = new WebSocket.Server({ port: 8086 })
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
+const tills = new Tills();
 
 function challengeGenerator () {
   setTimeout(async () => {
@@ -102,13 +104,21 @@ wss.on('connection', function connection(ws) {
       case "add":
         try {
           const session = await dbHelpers.getSessionFromId(req.session)
+          if (req.payload.startsWith("till")) {
+            console.log("Doing checkout")
+            tills.checkoutSession(session, req.payload)
+            ws.send(JSON.stringify({
+             action: 'reset'
+           }))
+            return
+          }
           const newProduct = await handler.add(req.payload, session)
-          
+
           helpers.send(ws, {
             action: 'added',
             payload: newProduct
           })
-          
+
           const challenge = await dbHelpers.findChallengeWithTimeRemaining()
           if (challenge && challenge.product === newProduct.id) {
             challenge.timeRemaining = 0
@@ -154,6 +164,10 @@ wss.on('connection', function connection(ws) {
             payload: mappedItems
         }))
         break;
+       case "registerTill":
+         console.log(req)
+         tills.register(req.barcode, ws)
+         break;
 
       default:
         console.log(`Invalid action found in message`)
