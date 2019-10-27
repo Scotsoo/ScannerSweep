@@ -32,7 +32,7 @@ async function findRandomProduct () {
 }
 
 async function findCrypticProductByProductId (id) {
-  const crypticProduct = await crypticProduct.findOne({ productId: id }).exec()
+  const crypticProduct = await CrypticProduct.findOne({ productId: id }).exec()
   return crypticProduct
 }
 
