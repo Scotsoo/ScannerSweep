@@ -1,8 +1,13 @@
 <template>
   <div class="container hello">
     <img src ="../assets/dale.png" style="width: 10vh" class="dale">
-    <h1 class="scanner">Scanner</h1>
-    <h1 class="sweep">SWEEP</h1>
+    <br/>
+    <img src="../assets/logo.png" style="width:50vw" class="logo">
+    <br/>
+    <br/>
+    <br/>
+    <!-- <h1 class="scanner">Scanner</h1> -->
+    <!-- <h1 class="sweep">SWEEP</h1> -->
     <h2>Scan your DCard to begin</h2>
   </div>
 </template>
@@ -39,10 +44,33 @@ export default {
     transform: rotate(-20deg);
   }
 }
+
+@keyframes smallrotate {
+  100% {
+    transform: rotate(5deg)
+  }
+  50% {
+    transform: rotate(-5deg) scale(1.2);
+  }
+  0% {
+    transform: rotate(5deg);
+  }
+}
+
 .dale {
   display: inline-block;
   animation: rotation 3s infinite ease;
 }
+.logo {
+  display: inline-block;
+  animation: smallrotate 3s infinite ease;
+}
+/*
+@keyframes wow {
+  100% {
+    transform:
+  }
+} */
 
 .scanner{
   color: #0476D9
