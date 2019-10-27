@@ -46,8 +46,13 @@ function roundToCurrency (value) {
     return Math.round(value * 100) / 100
 }
 
+function coinToss () {
+    return !!Math.round(Math.random())
+}
+
 module.exports = {
     broadcast: broadcastWrapper,
+    coinToss,
     generateRandom,
     generateRandomChallengeInterval,
     generateRandomDiscountPercent,

@@ -3,6 +3,7 @@ const Product = require('../models/Product')
 const Session = require('../models/Session')
 const Discount = require('../models/Discount')
 const helpers = require('../utils/helpers')
+const CrypticProduct = require('../models/CrypticProduct')
 
 const uuid = require('uuid')
 
@@ -51,6 +52,10 @@ async function getDiscountById (id) {
   return discount
 }
 
+async function findCrypticProductByProductId (id) {
+  const crypticProduct = await CrypticProduct.findOne({ productId: id }).exec()
+  return crypticProduct
+}
 
 module.exports = {
   generateDiscount,
@@ -59,5 +64,7 @@ module.exports = {
   getSessionFromId,
   findChallengeById,
   findChallengeWithTimeRemaining,
-  findRandomProduct
+  findCrypticProductByProductId,
+  findRandomProduct,
+  getProductById
 }
