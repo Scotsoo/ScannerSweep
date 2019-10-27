@@ -16,19 +16,45 @@ function challengeGenerator () {
   setTimeout(async () => {
     const product = await dbHelpers.findRandomProduct()
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
-	const crypticProduct = await dbHelpers.findCrypticProductByProductId(product.id)
+	  const crypticProduct = await dbHelpers.findCrypticProductByProductId(product.id)
 
-    const newDiscount = await dbHelpers.generateDiscount(product)
+    const standardChallenge = async () => {
+      const newDiscount = await dbHelpers.generateDiscount(product)
 
-	const newChallenge = new Challenge({
-      id: uuid.v4(),
-      discount: newDiscount.id,
-      product: product.id,
-      text: helpers.coinToss()
-        ? `Be the first to scan ${product.name}`
-        : crypticProduct.message,
-      timeRemaining: time
-    })
+      const newChallenge = new Challenge({
+        id: uuid.v4(),
+        discount: newDiscount.id,
+        product: product.id,
+        text: helpers.coinToss()
+          ? `Be the first to scan ${product.name}`
+          : crypticProduct.message,
+        timeRemaining: time
+      })
+
+      return newChallenge
+    }
+    
+    const scanChallenge = async () => {
+      const newDiscount = await dbHelpers.generateFlatDiscount()
+
+      const newChallenge = new Challenge({
+        id: uuid.v4(),
+        discount: newDiscount.id,
+        product: 0,
+        text: 'Scan 15 items in 10 seconds',
+        timeRemaining: 10
+      })
+
+      wss.client(ws => {
+        ws.scannedItems = 0
+      })
+
+      return newChallenge
+    }
+
+    const newChallenge = helpers.coinToss()
+      ? scanChallenge()
+      : standardChallenge()
 
     newChallenge.save()
 
@@ -51,6 +77,11 @@ function challengeGenerator () {
         helpers.broadcast(wss, {
           action: 'challenge_end'
         })
+
+        wss.clients.forEach(ws => {
+          ws.scannedItems = 0
+        })
+
         challengeGenerator()
       } else {
         challenge.timeRemaining--
@@ -73,6 +104,7 @@ challengeGenerator()
 
 wss.on('connection', function connection(ws) {
   ws.isAlive = true
+  ws.scannedItems = 0
 
   function checkClient () {
     console.log('checking for alive clients')
@@ -147,8 +179,9 @@ wss.on('connection', function connection(ws) {
         const challenge = await dbHelpers.findChallengeWithTimeRemaining()
 
           const newProduct = await handler.add(req.payload, session)
+          ws.scannedItems++
 
-          if (challenge && challenge.product === newProduct.id) {
+          if (challenge && (challenge.product === newProduct.id || challenge.product === 0 && ws.scannedItems > 14)) {
             challenge.timeRemaining = 0
             challenge.save()
             const discount = await dbHelpers.getDiscountById(challenge.discount)

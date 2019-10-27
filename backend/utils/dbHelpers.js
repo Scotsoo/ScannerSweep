@@ -88,6 +88,8 @@ async function findCrypticProductByProductId (id) {
 
 module.exports = {
   generateDiscount,
+  generateItemDiscount,
+  generateFlatDiscount,
   getDiscountById,
   getProductById,
   getSessionFromId,
