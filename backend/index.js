@@ -15,7 +15,7 @@ function challengeGenerator () {
     const product = await dbHelpers.findRandomProduct()
     const time = Math.round(Math.floor(helpers.generateRandom(20))) + 10
 
-    const newDiscount = dbHelpers.generateDiscount(product)
+    const newDiscount = await dbHelpers.generateDiscount(product)
 
     const newChallenge = new Challenge({
       id: uuid.v4(),
@@ -113,7 +113,7 @@ wss.on('connection', function connection(ws) {
             challenge.timeRemaining = 0
             challenge.save()
 
-            const discount = dbHelpers.getDiscountById(challenge.discount)
+            const discount = await dbHelpers.getDiscountById(challenge.discount)
 
             session.discounts.push(discount)
             session.save()
