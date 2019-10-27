@@ -54,6 +54,7 @@ const store = new Vuex.Store({
     },
     storeInitData (state, items) {
       state.scannedItems = Object.assign({}, items)
+      state.scannedItems = Object.assign({}, items.mappedItems)
       // state.websocketSessionId = sessionId
     }
   }

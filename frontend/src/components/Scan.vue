@@ -23,15 +23,15 @@
         </td>
       </tr>
       <tbody>
-        <tr v-for="scannedItemKey in Object.keys(scannedItems).reverse()" :key="scannedItemKey">
+        <tr v-for="scannedItem in Object.values(scannedItems).reverse()" :key="scannedItem.id">
           <td colspan="2">
-            {{scannedItems[scannedItemKey].name}}
+            {{scannedItem.name}}
           </td>
           <td>
-            {{scannedItems[scannedItemKey].quantity}}
+            {{scannedItem.quantity}}
           </td>
           <td>
-            £{{toMoney(calculatePrice(scannedItems[scannedItemKey]))}}
+            £{{toMoney(calculatePrice(scannedItem))}}
           </td>
         </tr>
       </tbody>
