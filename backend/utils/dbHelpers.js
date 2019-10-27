@@ -32,16 +32,12 @@ async function findRandomProduct () {
 }
 
 async function generateDiscount (product) {
-  const isPercentDiscount = !!Math.round(Math.random())
   const percentDiscount = helpers.generateRandomDiscountPercent(product.price)
-  const flatDiscount = helpers.generateRandomDiscountAmount(product.price)
-  const description = `${isPercentDiscount ? `${percentDiscount.percent}%` : `£${flatDiscount.toFixed(2)}`} discount on ${product.name}`
+
   const discount = new Discount({
     id: uuid.v4(),
-    amount: isPercentDiscount
-      ? percentDiscount.amount
-      : flatDiscount,
-    description
+    amount: percentDiscount.amount,
+    description: `${percentDiscount.percent}% discount on ${product.name}`
   })
 
   discount.save()
