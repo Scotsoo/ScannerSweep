@@ -125,9 +125,20 @@ wss.on('connection', function connection(ws) {
             items.forEach(item => {
                 mappedItems[item.id] = item
             })
+            const discounts = await Promise.all(session.discounts.map(async m => {
+              let discount = await dbHelpers.getDiscountById(m.id)
+              discount = JSON.parse(JSON.stringify(discount))
+              return discount
+            }))
+            const mappedDiscounts = {}
+            discounts.forEach(discount => {
+              mappedDiscounts[discount.id] = discount
+            })
             tills.checkoutSession( {
               id: session.id,
-              items: mappedItems}, req.payload)
+              items: mappedItems,
+              discounts: mappedDiscounts
+            }, req.payload)
             ws.send(JSON.stringify({
              action: 'reset'
            }))

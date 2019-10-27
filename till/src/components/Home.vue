@@ -27,7 +27,16 @@
           </td>
         </tr>
         <tbody>
-          <tr v-for="scannedItemKey in Object.keys(items).reverse()" :key="scannedItemKey">
+          <tr v-for="discountedItem in Object.values(discounts).reverse()" :key="discountedItem.id">
+            <td colspan="2">
+              {{discountedItem.description}}
+            </td>
+            <td>1</td>
+            <td>
+              -£{{toMoney(discountedItem.amount)}}
+            </td>
+          </tr>
+        <tr v-for="scannedItemKey in Object.keys(items).reverse()" :key="scannedItemKey">
             <td colspan="2">
               {{items[scannedItemKey].name}}
             </td>
@@ -63,6 +72,7 @@ export default {
       barcode: 'till000001',
       session: null,
       items: null,
+      discounts: null,
       ws: null
     }
   },
@@ -71,6 +81,9 @@ export default {
       let price = 0
       Object.values(this.items).forEach(data => {
         price += this.calculatePrice(data)
+      })
+      Object.values(this.discounts).forEach(data => {
+        price -= data.amount
       })
       return `£${this.toMoney(price)}`
     },
@@ -81,6 +94,7 @@ export default {
   methods: {
     reset() {
       this.items = null
+      this.discounts = null
       this.session = null
     },
     payment() {
@@ -106,6 +120,7 @@ export default {
         console.log(data.payload)
         this.session = data.payload.id
         this.items = data.payload.items
+        this.discounts = data.payload.discounts
       }
     })
   }
