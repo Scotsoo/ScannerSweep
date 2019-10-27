@@ -8,7 +8,9 @@
     <br/>
     <!-- <h1 class="scanner">Scanner</h1> -->
     <!-- <h1 class="sweep">SWEEP</h1> -->
-    <h2>Scan your D-Card to begin</h2>
+    <h2>Scan your </h2>
+    <img src="../assets/d-card.png" style="width: 30vw" class="d-card"/>
+    <h2> To Begin </h2>
   </div>
 </template>
 
@@ -57,6 +59,18 @@ export default {
   }
 }
 
+@keyframes dCardRotate {
+  100% {
+    transform: rotate(-10deg)
+  }
+  50% {
+    transform: rotate(5deg) scale(0.8);
+  }
+  0% {
+    transform: rotate(-10deg);
+  }
+}
+
 .dale {
   display: inline-block;
   animation: rotation 3s infinite ease;
@@ -64,6 +78,9 @@ export default {
 .logo {
   display: inline-block;
   animation: smallrotate 3s infinite ease;
+}
+.d-card {
+  animation: dCardRotate 3s infinite ease;
 }
 /*
 @keyframes wow {
