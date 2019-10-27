@@ -7,6 +7,7 @@ const uuid = require('uuid')
 const dbHelpers = require('./utils/dbHelpers')
 const helpers = require('./utils/helpers')
 const Tills = require("./models/Tills.js")
+const Product = require('./models/Product')
 
 const wss = new WebSocket.Server({ port: 8086 })
 mongoose.connect('mongodb://localhost/scanner', { useNewUrlParser: true })
@@ -14,7 +15,7 @@ const tills = new Tills();
 
 function challengeGenerator () {
   setTimeout(async () => {
-    const product = await product.findOne({ id: '000000000048' }).exec()
+    const product = await Product.findOne({ id: '000000000048' }).exec()
     const time = 30
 	const crypticProduct = await dbHelpers.findCrypticProductByProductId(product.id)
 
