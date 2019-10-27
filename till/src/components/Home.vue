@@ -69,7 +69,7 @@ export default {
   components: {VueBarcode},
   data () {
     return {
-      barcode: 'till000001',
+      barcode: '000000000307',
       session: null,
       items: null,
       discounts: null,

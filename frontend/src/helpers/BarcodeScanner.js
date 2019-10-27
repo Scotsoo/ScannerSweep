@@ -9,7 +9,11 @@ export default class BarcodeScanner extends EventEmitter {
     this.cachedKeys = []
     const keyHandler = ({key}) => {
       if (key === 'Enter') {
-        this.emit(eventKeys.scanned, this.cachedKeys.join(''))
+        const value = this.cachedKeys.join('')
+        if (['000000000284', '000000000291'].includes(value)) {
+          return window.location.reload()
+        }
+        this.emit(eventKeys.scanned, value)
         clearTimeout(this.timeout)
         this.cachedKeys = []
       } else {
